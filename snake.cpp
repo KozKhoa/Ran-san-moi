@@ -456,7 +456,12 @@ void Snake::createStatus() {
 	GotoXY(wall.top_left.x + (wall.top_right.x - wall.top_left.x) / 2 - strlen(COUNT_DOWN) / 2,
 		wall.top_left.y - DISTANCE_FROM_TOP_WALL);
 	wprintf(L"VỊ TRÍ THỨC ĂN : ");
+
 	_setmode(_fileno(stdout), _O_TEXT);
+
+	GotoXY(wall.top_left.x + (wall.top_right.x - wall.top_left.x) / 2 + strlen(FOOD_POS) / 2 - 1,
+		wall.top_left.y - DISTANCE_FROM_TOP_WALL);
+	printf("%d - %d      ", food.x, food.y);
 }
 
 void Snake::updateStatus() {
@@ -765,6 +770,7 @@ int4 Snake::gamePlayPage() {
 
 	createWall();
 	createStatus();
+	//updateStatus();
 
 	if (exist_food == false) {
 		randomFood();
@@ -797,6 +803,9 @@ int4 Snake::gamePlayPage() {
 			if (event == GOTO_HOME_PAGE) {
 				break;
 			}
+			printSnake();
+			GotoXY(food.x, food.y);
+			printf("%c", CHAR_FOOD);
 		}
 		changeDirection(event);
 		moveSnack();
@@ -808,11 +817,13 @@ int4 Snake::gamePlayPage() {
 		}
 		speedGame();
 	}
-
+	//reset_time = true;
 	int4 action = 0;
 	if (reason_for_lose == NOT_LOSE) {
 		allowed_for_continue = true;
-
+		action = GOTO_HOME_PAGE;
+		hard.limit_time = time_use;
+		//reset_time = false;
 		// thoat ra la do update file chuan bi choi tiep
 		//HANDLE hfile = CreateFileW(hfile, GENERIC_WRITE, 0, NULL, )
 	}
@@ -836,6 +847,7 @@ int4 Snake::gamePlayPage() {
 	if (action == GOTO_EXIT) {
 		return GOTO_EXIT;
 	}
+	return GOTO_HOME_PAGE;
 
 
 
@@ -972,7 +984,7 @@ int4 Snake::historyPage(File& file) {
 	}
 
 	char Back_symbol = char(174);
-		GotoXY(0, 0);
+	GotoXY(0, 0);
 	printf("%c BACKSPACE\n", Back_symbol);
 	GotoXY(0, screenInfo.dwSize.Y - 1);
 	printf(STRING_VERSION);

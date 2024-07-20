@@ -7,7 +7,7 @@
 #include "file.h"
 
 
-int main() {
+int mai() {
 	showPointer(turnOffPointer);
 	Snake snake;
 	Notifi notifi;
@@ -19,7 +19,7 @@ int main() {
 	return 0;
 }
 
-int4 in() {
+int4 main() {
 	SetConsoleTitle(L"GAME RẮN SĂN MỒI");
 	showPointer(turnOffPointer);
 	Snake snake;
@@ -39,11 +39,11 @@ int4 in() {
 			action.push(snake.difficultyPage());
 		}
 		else if (event == GOTO_GAMEPLAY_PAGE) {
-			snake.resetSnakeData();
 			action.push(snake.gamePlayPage());
-			if (action.top() != GOTO_CONTINUE_GAME) {
+			if (snake.allowed_for_continue == false) {
 				data_file.updateToDataFor_history(snake.hard.difficulty, snake.mode, snake.point, snake.hard.speed, snake.length, snake.time_use, snake.time_start);
 				data_file.writeDataToFile_history();
+				snake.resetSnakeData();
 			}
 		}
 		else if (event == GOTO_CONTINUE_GAME) {
@@ -52,14 +52,25 @@ int4 in() {
 				notifi.printNoDataFound();
 			}
 			else {
-				action.push(snake.gamePlayPage());
+				action.push(GOTO_GAMEPLAY_PAGE);
 			}
 		} 
 		else if (event == GOTO_HISTORY_PAGE) {
 			action.push(snake.historyPage(data_file));
 		}
 		cls();
-		/*cls();
+		
+	}
+
+	// TỐI 13/07/2024 BUG CŨ XUẤT HIỆN LẠI, LỖI MẤT HIỆN THỊ MỒI
+	// CẦN FIX LỖI KHI VÀO CHƠI CONTINUE THÌ LẠI BỊ RESET TIME LẠI BAN ĐẦU
+	// CẦN PHẢI XỬ LÍ CÁI TIME - THỜI GIAN CÒN LẠI KHI CHƠI CONTINUE NẾU KHÔNG THÌ THỜI GIAN SẼ BỊ ĐẶT SAI
+	// XỬ LÍ LÔI KO HIỂN THỊ VÍ TRÍ CỦA THỨC ĂN NGAY KHI VỪA MỚI VÀO 
+
+	return 0;
+}
+
+/*cls();
 		int move = action.top();
 		if (move == GOTO_HOME_PAGE) {
 			cls();
@@ -99,9 +110,3 @@ int4 in() {
 			cls();
 			break;
 		}*/
-	}
-
-	// TỐI 13/07/2024 BUG CŨ XUẤT HIỆN LẠI, LỖI MẤT HIỆN THỊ MỒI
-
-	return 0;
-}
