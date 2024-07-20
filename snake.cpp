@@ -743,9 +743,8 @@ int4 Snake::pauseGame() {
 	int4 code = choice(2, pos_of_first_choice, 3);
 	notifi.deleteNotificatinoTable(pos_top_left, pos_bottom_right);
 
-	allowed_for_continue = true;
-
 	if (code == 1) {
+		allowed_for_continue = true;
 		return GOTO_HOME_PAGE;
 	}
 	else if (code == 2) {
@@ -756,8 +755,8 @@ int4 Snake::pauseGame() {
 int4 Snake::gamePlayPage() {
 	Notifi notifi;
 
-	//notifi.readyClock();
-	//cls();
+	notifi.readyClock();
+	cls();
 
 	GotoXY(0, screenInfo.dwSize.Y - 1);
 	printf(STRING_VERSION);
@@ -778,7 +777,7 @@ int4 Snake::gamePlayPage() {
 
 	int4 reason_for_lose = 0;
 	bool reset_time = true;
-	while  ((reason_for_lose = checkGameOver()) && (reason_for_lose == NOT_LOSE)) {
+	while ((reason_for_lose = checkGameOver()) && (reason_for_lose == NOT_LOSE)) {
 		if (mode == MODE_CLASSIC) {
 			if (updateTime(notifi.countDownClock(hard.limit_time, reset_time)) == 0) {
 				reason_for_lose = LOSE_BY_TIME_UP;
@@ -812,15 +811,21 @@ int4 Snake::gamePlayPage() {
 
 	int4 action = 0;
 	if (reason_for_lose == NOT_LOSE) {
+		allowed_for_continue = true;
+
 		// thoat ra la do update file chuan bi choi tiep
 		//HANDLE hfile = CreateFileW(hfile, GENERIC_WRITE, 0, NULL, )
 	}
 	else if (reason_for_lose == LOSE_BY_WALL || reason_for_lose == LOSE_BY_EAT_ITSELF) {
+		allowed_for_continue = false;
 		action = endGame(STRING_GAME_OVER);
 	}
 	else if (reason_for_lose == LOSE_BY_TIME_UP) {
+		allowed_for_continue = false;
 		action = endGame(STRING_TIME_UP);
 	}
+
+	deleteWall();
 
 	if (action == GOTO_GAMEPLAY_PAGE) {
 		return GOTO_GAMEPLAY_PAGE;
@@ -885,106 +890,70 @@ int4 Snake::gamePlayPage() {
 	return 0;
 }
 
-void Snake::createTableOfInfomationFor_historyPage() {
-	int4 Distance_from_top = 3;
+void Snake::createTableOfInfomationFor_historyPage(Data_of_each_game& data, int distance_from_the_previous) {
+	int4 Distance_from_top = distance_from_the_previous;
 	int4 Distance_from_left = 5;
 	int4 Distance_from_right = screenInfo.dwSize.X - 20;
 	int4 Distace_in_middle = screenInfo.dwSize.X / 2 - 10;
 
-	for (int4 i = 0; i < file.num_of_data; i++) {
-		std::cout << "\n|" << i + 1 << "|" << std::setfill(' ') << std::setw(screenInfo.dwSize.X / 20) << ' ';
-		std::cout << std::setfill('-') << std::setw(screenInfo.dwSize.X * 9 / 10) << ' ';
+	char* time_start = new char[30];
+	ctime_s(time_start, 30, &data.time_start);
+	GotoXY(screenInfo.dwSize.X / 2 - strlen(time_start) / 2, Distance_from_top);
+	printf("%s", time_start);
+	delete[] time_start;
 
-		char* time_start = new char[30];
-		ctime_s(time_start, 30, &file.data[i].time_start);
-		GotoXY(screenInfo.dwSize.X / 2 - strlen(time_start) / 2, Distance_from_top);
-		printf("%s", time_start);
-		delete[] time_start;
-
-		_setmode(_fileno(stdout), _O_U16TEXT);
-		GotoXY(Distance_from_left, Distance_from_top + 2);
-		std::wcout << L"MODE : ";
-		if (file.data[i].mode == MODE_CLASSIC) {
-			std::wcout << L"CỔ ĐIỂN";
-		}
-		else if (file.data[i].mode == MODE_FREEDOM) {
-			std::wcout << L"TỰ DO";
-		}
-
-		GotoXY(Distace_in_middle, Distance_from_top + 2);
-		std::wcout << "DIFFICULTY : ";
-		if (file.data[i].difficulty == EASY_CHOICE) {
-			std::wcout << L"EASY";
-		}
-		else if (file.data[i].difficulty == MEDIUM_CHOICE) {
-			std::wcout << L"MEDIUM";
-		}
-		else if (file.data[i].difficulty == HARD_CHOICE) {
-			std::wcout << L"HARD";
-		}
-
-		GotoXY(Distance_from_right, Distance_from_top + 2);
-		std::wcout << L"POINT: " << file.data[i].point;
-
-		GotoXY(Distance_from_left, Distance_from_top + 4);
-		std::wcout << L"SPEED: " << file.data[i].speed;
-
-		GotoXY(Distace_in_middle, Distance_from_top + 4);
-		std::wcout << L"LENGTH: " << file.data[i].length;
-
-		GotoXY(Distance_from_right, Distance_from_top + 4);
-		if (file.data[i].mode == MODE_CLASSIC) {
-			std::wcout << L"TIME LEFT: ";
-			if (file.data[i].difficulty == EASY_CHOICE) {
-				std::wcout << file.data[i].time_finish << " / " << LIMIT_TIME_EASY;
-			}
-			else if (file.data[i].difficulty == MEDIUM_CHOICE) {
-				std::wcout << file.data[i].time_finish << " / " << LIMIT_TIME_MEDIUM;
-			}
-			else if (file.data[i].difficulty == HARD_CHOICE) {
-				std::wcout << file.data[i].time_finish << " / " << LIMIT_TIME_HARD;
-			}
-		}
-		else if (file.data[i].mode == MODE_FREEDOM) {
-			std::wcout << L"TIME USE: " << file.data[i].time_finish;
-		}
-		/*	std::wcout << L"TIME USE: ";
-		if (file.data[i].mode == MODE_CLASSIC) {
-			if (file.data[i].difficulty == EASY_CHOICE) {
-				std::wcout << LIMIT_TIME_EASY - file.data[i].time_finish;
-			}
-			else if (file.data[i].difficulty == MEDIUM_CHOICE) {
-				std::wcout << LIMIT_TIME_MEDIUM - file.data[i].time_finish;
-			}
-			else if (file.data[i].difficulty == HARD_CHOICE) {
-				std::wcout << LIMIT_TIME_HARD - file.data[i].time_finish;
-			}
-		}
-		else if (file.data[i].mode == MODE_FREEDOM) {
-			std::wcout << file.data[i].time_finish;
-		}*/
-		_setmode(_fileno(stdout), _O_TEXT);
-
-		Distance_from_top = Distance_from_top + 7;
+	_setmode(_fileno(stdout), _O_U16TEXT);
+	GotoXY(Distance_from_left, Distance_from_top + 2);
+	std::wcout << L"MODE : ";
+	if (data.mode == MODE_CLASSIC) {
+		std::wcout << L"CỔ ĐIỂN";
 	}
+	else if (data.mode == MODE_FREEDOM) {
+		std::wcout << L"TỰ DO";
+	}
+
+	GotoXY(Distace_in_middle, Distance_from_top + 2);
+	std::wcout << "DIFFICULTY : ";
+	if (data.difficulty == EASY_CHOICE) {
+		std::wcout << L"EASY";
+	}
+	else if (data.difficulty == MEDIUM_CHOICE) {
+		std::wcout << L"MEDIUM";
+	}
+	else if (data.difficulty == HARD_CHOICE) {
+		std::wcout << L"HARD";
+	}
+
+	GotoXY(Distance_from_right, Distance_from_top + 2);
+	std::wcout << L"POINT: " << data.point;
+
+	GotoXY(Distance_from_left, Distance_from_top + 4);
+	std::wcout << L"SPEED: " << data.speed;
+
+	GotoXY(Distace_in_middle, Distance_from_top + 4);
+	std::wcout << L"LENGTH: " << data.length;
+
+	GotoXY(Distance_from_right, Distance_from_top + 4);
+	if (data.mode == MODE_CLASSIC) {
+		std::wcout << L"TIME LEFT: ";
+		if (data.difficulty == EASY_CHOICE) {
+			std::wcout << data.time_finish << " / " << LIMIT_TIME_EASY;
+		}
+		else if (data.difficulty == MEDIUM_CHOICE) {
+			std::wcout << data.time_finish << " / " << LIMIT_TIME_MEDIUM;
+		}
+		else if (data.difficulty == HARD_CHOICE) {
+			std::wcout << data.time_finish << " / " << LIMIT_TIME_HARD;
+		}
+	}
+	else if (data.mode == MODE_FREEDOM) {
+		std::wcout << L"TIME USE: " << data.time_finish;
+	}
+	_setmode(_fileno(stdout), _O_TEXT);
 }
 
-int4 Snake::historyPage() {
-	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
-	COORD screen_buffer_size = { screenInfo.dwSize.X, max(screenInfo.dwSize.Y, file.num_of_data * 7 + 5) };
-	SetConsoleScreenBufferSize(hstdout, screen_buffer_size);
-
-	HANDLE hfile = CreateFileW(FILE_NAME_DATA_FOR_CONTINUE_GAME, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
+int4 Snake::historyPage(File& file) {
 	Notifi notifi;
-	char Back_symbol = char(174);
-
-	GotoXY(0, screen_buffer_size.Y - 1);
-	printf(STRING_VERSION);
-
-	GotoXY(0, 0);
-	printf("%c BACKSPACE\n", Back_symbol);
-
 	char NO_DATA_FOUND[] = "No data found";
 	if (file.num_of_data == 0) {
 		COORD pos_top_left = { screenInfo.dwSize.X / 2 - 10, screenInfo.dwSize.Y / 2 - 2 };
@@ -992,17 +961,23 @@ int4 Snake::historyPage() {
 		notifi.notificationTable(pos_top_left, pos_bottom_right);
 		GotoXY(screenInfo.dwSize.X / 2 - strlen(NO_DATA_FOUND) / 2, screenInfo.dwSize.Y / 2);
 		printf(NO_DATA_FOUND);
-		while (_getch() != CODE_BACKSPACE);
-		return GOTO_HOME_PAGE;
+	}
+	else {
+		GotoXY(0, 1);
+		for (int i = 0; i < file.num_of_data; i++) {
+			std::cout << "\n\n|" << i + 1 << "|" << std::setfill(' ') << std::setw(screenInfo.dwSize.X / 20) << ' ';
+			std::cout << std::setfill('-') << std::setw(screenInfo.dwSize.X * 9 / 10) << '\n';
+			createTableOfInfomationFor_historyPage(file.data[i], i * 7 + 3);
+		}
 	}
 
-	createTableOfInfomationFor_historyPage();
+	char Back_symbol = char(174);
+		GotoXY(0, 0);
+	printf("%c BACKSPACE\n", Back_symbol);
+	GotoXY(0, screenInfo.dwSize.Y - 1);
+	printf(STRING_VERSION);
+
 	while (_getch() != CODE_BACKSPACE);
-
-	screen_buffer_size = { 120, 30 };
-	SetConsoleScreenBufferSize(hstdout, screen_buffer_size);
-
-	CloseHandle(hfile);
 
 	return GOTO_HOME_PAGE;
 }

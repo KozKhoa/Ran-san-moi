@@ -207,16 +207,6 @@ private:
 		int4 speed;
 		int4 minus_speed;
 	};
-	struct Data_of_each_game {
-		char difficulty;
-		char mode; // 'c' == classic, 'f' == freedom;
-		int2 point;
-		int2 speed;
-		int2 length;
-		int2 time_finish;
-		time_t time_start;
-
-	};
 	std::vector<Point> snake;
 	Point head;
 	Point tail;
@@ -237,7 +227,7 @@ private:
 	void printSNAKES_character(int distance_from_top, int distance_from_left);
 	int chooseHome();
 	void createTableFor_endGame(COORD pos_top_left, COORD pos_bottom_right);
-	void createTableOfInfomationFor_historyPage();
+	void createTableOfInfomationFor_historyPage(Data_of_each_game &data, int distance_from_the_previous);
 	void changeMode();
 public:
 	Snake();
@@ -268,5 +258,5 @@ public:
 	int difficultyPage();
 	int homePage();
 	int gamePlayPage();
-	int historyPage();
+	int historyPage(File &file);
 };
