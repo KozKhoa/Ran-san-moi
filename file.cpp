@@ -4,6 +4,7 @@ File::File() {
 	hfile_history_file = CreateFileW(FILE_NAME_DATA_FOR_HISTORY_FILE, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	num_of_data = 0;
 	data.resize(num_of_data);
+	getDataFromFile_history();
 }
 
 File::~File() {
