@@ -173,10 +173,10 @@ void Snake::inCoRan() {
 
 void Snake::speedGame() {
 	if (head_direction == 'u' || head_direction == 'd') {
-		Sleep(hard.speed * 3 / 2);
+		Sleep(hard.speed * 3 / 2 - bonus_speed);
 	}
 	else {
-		Sleep(hard.speed);
+		Sleep(hard.speed - bonus_speed);
 	}
 }
 
@@ -208,17 +208,20 @@ void Snake::moveSnack() {
 void Snake::changeDirection(int4 event) {
 	if (head_direction != 'd' && (event == CODE_UP_ARROW || event == 'w' || event == 'W')) {
 		head_direction = 'u';
+		bonus_speed = 0;
 	}
 	else if (head_direction != 'u' && (event == CODE_DOWN_ARROW || event == 's' || event == 'S')) {
 		head_direction = 'd';
+		bonus_speed = 0;
 	}
 	else if (head_direction != 'l' && (event == CODE_RIGHT_ARROW || event == 'd' || event == 'D')) {
 		head_direction = 'r';
+		bonus_speed = 0;
 	}
 	else if (head_direction != 'r' && (event == CODE_LEFT_ARROW || event == 'a' || event == 'A')) {
 		head_direction = 'l';
+		bonus_speed = 0;
 	}
-
 }
 
 void Snake::createWall() {
@@ -471,7 +474,7 @@ void Snake::updateStatus() {
 	}
 
 	std::cout << std::setfill(' ');
-	GotoXY(wall.top_left.x + strlen(POINT), wall.top_left.y - DISTANCE_FROM_TOP_WALL);
+	GotoXY(wall.top_left.x + strlen(STRING_POINT), wall.top_left.y - DISTANCE_FROM_TOP_WALL);
 	printf("%d    ", point);
 
 	GotoXY(wall.top_right.x - POS_STATUC_RIGHT + strlen(LENGTH), wall.top_right.y - DISTANCE_FROM_TOP_WALL);
@@ -904,19 +907,19 @@ int4 Snake::gamePlayPage() {
 
 void Snake::createTableOfInfomationFor_historyPage(Data_of_each_game& data, int distance_from_the_previous) {
 	int4 Distance_from_top = distance_from_the_previous;
-	int4 Distance_from_left = 5;
-	int4 Distance_from_right = screenInfo.dwSize.X - 20;
-	int4 Distace_in_middle = screenInfo.dwSize.X / 2 - 10;
-
+	short Distance_from_left = 5;
+	short Distace_in_middle = screenInfo.dwSize.X / 2 - 10;
+	short Distance_from_right = screenInfo.dwSize.X - 20;
 	char* time_start = new char[30];
 	ctime_s(time_start, 30, &data.time_start);
-	GotoXY(screenInfo.dwSize.X / 2 - strlen(time_start) / 2, Distance_from_top);
-	printf("%s", time_start);
-	delete[] time_start;
+
+	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	std::cout << std::setfill(' ');
+	std::cout << std::setw(screenInfo.dwSize.X / 2 + strlen(time_start) / 2) << std::right << time_start << '\n';
 
 	_setmode(_fileno(stdout), _O_U16TEXT);
-	GotoXY(Distance_from_left, Distance_from_top + 2);
-	std::wcout << L"MODE : ";
+	std::wcout << std::setw(3) << L" " << L"MODE: ";
 	if (data.mode == MODE_CLASSIC) {
 		std::wcout << L"CỔ ĐIỂN";
 	}
@@ -924,8 +927,8 @@ void Snake::createTableOfInfomationFor_historyPage(Data_of_each_game& data, int 
 		std::wcout << L"TỰ DO";
 	}
 
-	GotoXY(Distace_in_middle, Distance_from_top + 2);
-	std::wcout << "DIFFICULTY : ";
+	GetConsoleScreenBufferInfo(hstdout, &screenInfo);
+	std::wcout << std::setw(screenInfo.dwSize.X / 2 - screenInfo.dwCursorPosition.X - 10) << L" " << L"DIFFICULTY: ";
 	if (data.difficulty == EASY_CHOICE) {
 		std::wcout << L"EASY";
 	}
@@ -936,16 +939,18 @@ void Snake::createTableOfInfomationFor_historyPage(Data_of_each_game& data, int 
 		std::wcout << L"HARD";
 	}
 
-	GotoXY(Distance_from_right, Distance_from_top + 2);
-	std::wcout << L"POINT: " << data.point;
+	GetConsoleScreenBufferInfo(hstdout, &screenInfo);
+	std::wcout << std::setw(screenInfo.dwSize.X - screenInfo.dwCursorPosition.X - 20) << L" " << L"POINT: " << data.point;
 
-	GotoXY(Distance_from_left, Distance_from_top + 4);
-	std::wcout << L"SPEED: " << data.speed;
+	wprintf(L"\n\n");
 
-	GotoXY(Distace_in_middle, Distance_from_top + 4);
-	std::wcout << L"LENGTH: " << data.length;
+	std::wcout << std::setw(3) << L" " << L"SPEED: " << data.speed;
 
-	GotoXY(Distance_from_right, Distance_from_top + 4);
+	GetConsoleScreenBufferInfo(hstdout, &screenInfo);
+	std::wcout << std::setw(screenInfo.dwSize.X / 2 - screenInfo.dwCursorPosition.X - 10) << L" " << L"LENGTH: " << data.length;
+
+	GetConsoleScreenBufferInfo(hstdout, &screenInfo);
+	std::wcout << std::setw(screenInfo.dwSize.X - screenInfo.dwCursorPosition.X - 20) << L" ";
 	if (data.mode == MODE_CLASSIC) {
 		std::wcout << L"TIME LEFT: ";
 		if (data.difficulty == EASY_CHOICE) {
@@ -962,11 +967,19 @@ void Snake::createTableOfInfomationFor_historyPage(Data_of_each_game& data, int 
 		std::wcout << L"TIME USE: " << data.time_finish;
 	}
 	_setmode(_fileno(stdout), _O_TEXT);
+
+	delete[] time_start;
 }
 
 int4 Snake::historyPage(File& file) {
 	Notifi notifi;
+	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	char NO_DATA_FOUND[] = "No data found";
+	char Back_symbol = char(174);
+
+	GotoXY(0, 0);
+	printf("%c BACKSPACE\n", Back_symbol);
+
 	if (file.num_of_data == 0) {
 		COORD pos_top_left = { screenInfo.dwSize.X / 2 - 10, screenInfo.dwSize.Y / 2 - 2 };
 		COORD pos_bottom_right = { screenInfo.dwSize.X / 2 + 10, screenInfo.dwSize.Y / 2 + 2 };
@@ -977,20 +990,21 @@ int4 Snake::historyPage(File& file) {
 	else {
 		GotoXY(0, 1);
 		for (int i = 0; i < file.num_of_data; i++) {
-			std::cout << "\n\n|" << i + 1 << "|" << std::setfill(' ') << std::setw(screenInfo.dwSize.X / 20) << ' ';
+			std::cout << "\n|" << i + 1 << "|" << std::setfill(' ') << std::setw(screenInfo.dwSize.X / 20) << ' ';
 			std::cout << std::setfill('-') << std::setw(screenInfo.dwSize.X * 9 / 10) << '\n';
 			createTableOfInfomationFor_historyPage(file.data[i], i * 7 + 3);
+			printf("\n");
 		}
 	}
+	printf("\n");
 
-	char Back_symbol = char(174);
-	GotoXY(0, 0);
-	printf("%c BACKSPACE\n", Back_symbol);
+	GetConsoleScreenBufferInfo(hstdout, &screenInfo);
 	GotoXY(0, screenInfo.dwSize.Y - 1);
 	printf(STRING_VERSION);
 
 	while (_getch() != CODE_BACKSPACE);
+	system("cls");
+
 
 	return GOTO_HOME_PAGE;
 }
-

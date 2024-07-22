@@ -121,7 +121,7 @@
 #define MEDIUM "MEDIUM"
 #define HARD "HARD"
 #define TEN_GAME "GAME RAN SAN MOI"
-#define POINT "POINT : "
+#define STRING_POINT "POINT : "
 #define LENGTH "CHIEU DAI RAN : "
 #define COUNT_DOWN "THOI GIAN CON LAI : "
 #define SPEED "SPEED : "
@@ -190,15 +190,15 @@ using int4 = int32_t;
 class Snake {
 private:
 	CONSOLE_SCREEN_BUFFER_INFO screenInfo;
-	struct Point {
+	struct ToaDo {
 		int4 x;
 		int4 y;
 	};
 	struct Wall {
-		Point top_left;
-		Point top_right;
-		Point bottom_left;
-		Point bottom_right;
+		ToaDo top_left;
+		ToaDo top_right;
+		ToaDo bottom_left;
+		ToaDo bottom_right;
 	};
 	struct Difficulty {
 		char difficulty; // 'e' = easy, 'm' = medium, 'h' = hard;
@@ -207,14 +207,15 @@ private:
 		int4 speed;
 		int4 minus_speed;
 	};
-	std::vector<Point> snake;
-	Point head;
-	Point tail;
-	Point food;
+	std::vector<ToaDo> snake;
+	ToaDo head;
+	ToaDo tail;
+	ToaDo food;
 	
 	bool exist_food;
 	char head_direction;
 	char prev_head_direction;
+	int4 bonus_speed; // cân nhắc xóa biến nảy ra khỏi chương trình
 
 	int choice(int num_of_choice, COORD pos_of_first_choice, int distance_between_each_choice);
 	void inDauRan();
@@ -258,5 +259,5 @@ public:
 	int difficultyPage();
 	int homePage();
 	int gamePlayPage();
-	int historyPage(File &file);
+	int historyPage(File& file);
 };
