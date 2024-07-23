@@ -106,7 +106,7 @@ void Notifi::readyClock() {
 	setColor(BLACK, WHITE);
 }
 
-int4 Notifi::countClock(time_t sec, bool& reset) {
+int4 Notifi::countClock(bool& reset) {
 	static time_t tgian_goc = time(0);
 	static int4 current_sec = 0;
 

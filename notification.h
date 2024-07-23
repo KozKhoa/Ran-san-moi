@@ -48,7 +48,7 @@ public:
 	void print_number();
 	void print_character();
 	void readyClock();
-	int4 countClock(time_t sec, bool &reset);	
+	int4 countClock( bool &reset);	
 	// Number
 	void reset_number();
 	void numberOne();
@@ -81,6 +81,5 @@ public:
 	
 	void notificationTable(COORD pos_top_left, COORD pos_bottom_right);
 	void deleteNotificatinoTable(COORD pos_top_left, COORD pos_bottom_right);
-	//int countClock(bool& reset_time);
 	void printNoDataFound();
 };
