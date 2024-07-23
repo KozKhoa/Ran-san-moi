@@ -106,28 +106,43 @@ void Notifi::readyClock() {
 	setColor(BLACK, WHITE);
 }
 
-int4 Notifi::countDownClock(time_t sec, bool& reset) {
-	if (sec == -1) {
-		return 999999999;
-	}
+int4 Notifi::countClock(time_t sec, bool& reset) {
 	static time_t tgian_goc = time(0);
+	static int4 current_sec = 0;
+
 	if (reset == true) {
 		tgian_goc = time(0);
+		current_sec = 0;
 		reset = false;
 	}
 	time_t tgian = time(0);
-	return (sec - (tgian - tgian_goc) % (sec + 1));
-}
-
-int Notifi::countClock(bool& reset_time) {
-	static time_t t = time(0);
-	if (reset_time == true) {
-		reset_time = false;
-		t = time(0);
+	if (tgian - tgian_goc > 0) {
+		tgian_goc = tgian;
+		current_sec = current_sec + 1;
 	}
-	return time(0) - t;
+	return current_sec;
 
+	//if (sec == -1) {
+	//	return 999999999;
+	//}
+	//static time_t tgian_goc = time(0);
+	//if (reset == true) {
+	//	tgian_goc = time(0);
+	//	reset = false;
+	//}
+	//time_t tgian = time(0);
+	//return (sec - (tgian - tgian_goc) % (sec + 1));
 }
+//
+//int Notifi::countClock(bool& reset_time) {
+//	static time_t t = time(0);
+//	if (reset_time == true) {
+//		reset_time = false;
+//		t = time(0);
+//	}
+//	return time(0) - t;
+//
+//}
 
 void Notifi::reset_character() {
 	for (int i = 0; i < 5; i++) {
