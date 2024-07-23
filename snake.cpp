@@ -31,6 +31,7 @@ Snake::Snake() {
 	hard.minus_speed = MINUS_SPEED_EASY;
 
 	time_start = time(0);
+	time_left = 0;
 
 	allowed_for_continue = false;
 	exist_food = false;
@@ -75,10 +76,6 @@ int4 Snake::choice(int4 num_of_choice, COORD pos_of_first_choice, int4 distance_
 				code++;
 			}
 			else if (code_keyboard == CODE_ENTER) {
-				break;
-			}
-			else if (code_keyboard == CODE_BACKSPACE) {
-				code = -2;
 				break;
 			}
 
@@ -375,6 +372,7 @@ void Snake::resetSnakeData() {
 	allowed_for_continue = false;
 
 	time_start = time(0);
+	time_left = 0;
 
 	length = 5;
 	snake.resize(length);
@@ -423,7 +421,7 @@ bool Snake::updateTime(int4 sec) {
 		wall.top_left.y - DISTANCE_FROM_TOP_WALL - 1);
 	printf("%d    ", sec);
 	time_use = sec;
-	if (sec == 0) {
+	if (sec <= 0) {
 		return false;
 	}
 	return true;
@@ -556,23 +554,76 @@ int4 Snake::difficultyPage() {
 
 int4 Snake::chooseDifficulty() {
 	COORD pos_of_first_choice = { screenInfo.dwSize.X / 2, POS_OF_EASY_Y };
-	int4 code = choice(3, pos_of_first_choice, 3);
+	//int4 code = choice(3, pos_of_first_choice, 3);
+	int4 num_of_choice = 3;
+	int4* choice_y = new int4[num_of_choice];
+	choice_y[0] = pos_of_first_choice.Y;
+	for (int4 i = 1; i < num_of_choice; i++) {
+		choice_y[i] = choice_y[i - 1] + 3;
+	}
+	int4 code_keyboard = 0;
+	int4 code = 0;
 
-	if (code == 1) {
+	int4 pos_of_pointer_char_left_X = pos_of_first_choice.X - 10;
+	int4 pos_of_pointer_char_right_X = pos_of_first_choice.X + 10;
+
+	GotoXY(pos_of_pointer_char_left_X, choice_y[code]);
+	printf("%c", POINTER_CHAR_LEFT);
+	GotoXY(pos_of_pointer_char_right_X, choice_y[code]);
+	printf("%c", POINTER_CHAR_RIGHT);
+
+	while (true) {
+		if (_kbhit()) {
+			code_keyboard = _getch();
+			int4 old_code = code;
+			if (code_keyboard == CODE_UP_ARROW || code_keyboard == 'w' || code_keyboard == 'W') {
+				code--;
+			}
+			else if (code_keyboard == CODE_DOWN_ARROW || code_keyboard == 's' || code_keyboard == 'S') {
+				code++;
+			}
+			else if (code_keyboard == CODE_ENTER) {
+				break;
+			}
+			else if (code_keyboard == CODE_BACKSPACE) {
+				code = -1;
+				break;
+			}
+
+			if (code < 0) {
+				code = num_of_choice - 1;
+			}
+			else if (code >= num_of_choice) {
+				code = 0;
+			}
+			GotoXY(pos_of_pointer_char_left_X, choice_y[old_code]);
+			printf(" ");
+			GotoXY(pos_of_pointer_char_right_X, choice_y[old_code]);
+			printf(" ");
+
+			GotoXY(pos_of_pointer_char_left_X, choice_y[code]);
+			printf("%c", POINTER_CHAR_LEFT);
+			GotoXY(pos_of_pointer_char_right_X, choice_y[code]);
+			printf("%c", POINTER_CHAR_RIGHT);
+		}
+	}
+	delete[] choice_y;
+
+	if (code == 0) {
 		hard.difficulty = 'e';
 		hard.limit_time = LIMIT_TIME_EASY;
 		hard.plus_point = PLUS_POINT_EASY;
 		hard.speed = SPEED_EASY;
 		hard.minus_speed = MINUS_SPEED_EASY;
 	}
-	else if (code == 2) {
+	else if (code == 1) {
 		hard.difficulty = 'm';
 		hard.limit_time = LIMIT_TIME_MEDIUM;
 		hard.plus_point = PLUS_POINT_MEDIUM;
 		hard.speed = SPEED_MEDIUM;
 		hard.minus_speed = MINUS_SPEED_MEDIUM;
 	}
-	else if (code == 3) {
+	else if (code == 2) {
 		hard.difficulty = 'h';
 		hard.limit_time = LIMIT_TIME_HARD;
 		hard.plus_point = PLUS_POINT_HARD;
@@ -773,7 +824,6 @@ int4 Snake::gamePlayPage() {
 
 	createWall();
 	createStatus();
-	//updateStatus();
 
 	if (exist_food == false) {
 		randomFood();
@@ -786,15 +836,19 @@ int4 Snake::gamePlayPage() {
 
 	int4 reason_for_lose = 0;
 	bool reset_time = true;
+	if (allowed_for_continue == false) {
+		time_left = hard.limit_time;
+	}
+	printSnake();
 	while ((reason_for_lose = checkGameOver()) && (reason_for_lose == NOT_LOSE)) {
 		if (mode == MODE_CLASSIC) {
-			if (updateTime(notifi.countDownClock(hard.limit_time, reset_time)) == 0) {
+			if (updateTime(time_left - notifi.countClock(hard.limit_time, reset_time)) == 0) {
 				reason_for_lose = LOSE_BY_TIME_UP;
 				break;
 			}
 		}
-		if (mode == MODE_FREEDOM) {
-			updateTime(notifi.countClock(reset_time));
+		else if (mode == MODE_FREEDOM) {
+			updateTime(notifi.countClock(hard.limit_time, reset_time) + time_left);
 		}
 
 		int4 event = -1;
@@ -825,8 +879,7 @@ int4 Snake::gamePlayPage() {
 	if (reason_for_lose == NOT_LOSE) {
 		allowed_for_continue = true;
 		action = GOTO_HOME_PAGE;
-		hard.limit_time = time_use;
-		//reset_time = false;
+		time_left = time_use;
 		// thoat ra la do update file chuan bi choi tiep
 		//HANDLE hfile = CreateFileW(hfile, GENERIC_WRITE, 0, NULL, )
 	}
@@ -851,56 +904,6 @@ int4 Snake::gamePlayPage() {
 		return GOTO_EXIT;
 	}
 	return GOTO_HOME_PAGE;
-
-
-
-	//GotoXY(0, screenInfo.dwSize.Y - 1);
-	//printf(STRING_VERSION);
-	//Notifi notifi;
-	//notifi.readyClock();
-	//cls();
-	//GotoXY(0, screenInfo.dwSize.Y - 1);
-	//printf(STRING_VERSION);
-	//createWall();
-	//createStatus();
-	//printSnake();
-	//bool restart_game = true;
-	//int4 action = -1;
-	//int4 event = -1;
-
-	//updateTime(9999);
-	//time_start = time(0);
-	//while (!checkGameOver()) {
-	//	if ((mode == MODE_CLASSIC) && (!updateTime(notifi.countDownClock(hard.limit_time, restart_game)))) {
-	//		action = endGame(TIME_UP);
-	//		allowed_for_continue = false;
-	//		break;
-	//	}
-	//	else if (mode == MODE_FREEDOM) {
-	//		updateTime(notifi.countClock(restart_game));
-	//	}
-	//	if (_kbhit() && (event = _getch()));
-	//	if (event == CODE_BACKSPACE) {
-	//		if (pauseTable() == GOTO_HOME_PAGE) {
-	//			action = GOTO_HOME_PAGE;
-	//			break;
-	//		}
-	//		printSnake();
-	//		GotoXY(food.x, food.y);
-	//		printf("%c", CHAR_FOOD);
-	//	}
-	//	changeDirection(event);
-	//	moveSnack();
-	//	checkEatFood();
-	//	speedGame();
-	//}
-
-	//if (action == -1) { // tức là thoát vì game over chứ không phải hết giờ
-	//	action = endGame(STRING_GAME_OVER);
-	//	allowed_for_continue = false;
-	//}
-	//deleteWall();
-	//return action;
 
 	return 0;
 }
@@ -1008,3 +1011,44 @@ int4 Snake::historyPage(File& file) {
 
 	return GOTO_HOME_PAGE;
 }
+
+void updateDataTo_continueFile(Snake &snake) {
+	wchar_t continue_file_name[] = L"data_for_continue_game.bin";
+	HANDLE hfile = CreateFileW(continue_file_name, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hfile == INVALID_HANDLE_VALUE) { throw std::exception("Cannot open file to write"); };
+	DWORD write_success;
+
+	WriteFile(hfile, &snake.hard.speed, sizeof(snake.hard.speed), &write_success, NULL);
+	WriteFile(hfile, &snake.time_left, sizeof(snake.time_left), &write_success, NULL);
+	WriteFile(hfile, &snake.mode, sizeof(snake.mode), &write_success, NULL);
+	WriteFile(hfile, &snake.point, sizeof(snake.point), &write_success, NULL);
+	WriteFile(hfile, &snake.food, sizeof(snake.food), &write_success, NULL);
+	WriteFile(hfile, &snake.length, sizeof(snake.length), &write_success, NULL);
+	WriteFile(hfile, &snake.snake[0], sizeof(snake.snake[0]) * snake.length, &write_success, NULL);
+	WriteFile(hfile, &snake.allowed_for_continue, sizeof(snake.allowed_for_continue), &write_success, NULL);
+	
+	CloseHandle(hfile);
+	hfile = NULL;
+}
+
+void readDataFrom_continueFile(Snake& snake) {
+	wchar_t continue_file_name[] = L"data_for_continue_game.bin";
+	HANDLE hfile = CreateFileW(continue_file_name, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hfile == INVALID_HANDLE_VALUE) { throw std::exception("Cannot open file to read"); };
+	DWORD read_success;
+
+	ReadFile(hfile, &snake.hard.speed, sizeof(snake.hard.speed), &read_success, NULL);
+	ReadFile(hfile, &snake.time_left, sizeof(snake.time_left), &read_success, NULL);
+	ReadFile(hfile, &snake.mode, sizeof(snake.mode), &read_success, NULL);
+	ReadFile(hfile, &snake.point, sizeof(snake.point), &read_success, NULL);
+	ReadFile(hfile, &snake.food, sizeof(snake.food), &read_success, NULL);
+	ReadFile(hfile, &snake.length, sizeof(snake.length), &read_success, NULL);
+	snake.snake.resize(snake.length);
+	ReadFile(hfile, &snake.snake[0], sizeof(snake.snake[0]) * snake.length, &read_success, NULL);
+	ReadFile(hfile, &snake.allowed_for_continue, sizeof(snake.allowed_for_continue), &read_success, NULL);
+
+
+	CloseHandle(hfile);
+	hfile = NULL;
+}
+

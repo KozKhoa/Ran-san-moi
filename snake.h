@@ -190,15 +190,11 @@ using int4 = int32_t;
 class Snake {
 private:
 	CONSOLE_SCREEN_BUFFER_INFO screenInfo;
-	struct ToaDo {
-		int4 x;
-		int4 y;
-	};
 	struct Wall {
-		ToaDo top_left;
-		ToaDo top_right;
-		ToaDo bottom_left;
-		ToaDo bottom_right;
+		POINT top_left;
+		POINT top_right;
+		POINT bottom_left;
+		POINT bottom_right;
 	};
 	struct Difficulty {
 		char difficulty; // 'e' = easy, 'm' = medium, 'h' = hard;
@@ -207,10 +203,8 @@ private:
 		int4 speed;
 		int4 minus_speed;
 	};
-	std::vector<ToaDo> snake;
-	ToaDo head;
-	ToaDo tail;
-	ToaDo food;
+	POINT head;
+	POINT tail;
 	
 	bool exist_food;
 	char head_direction;
@@ -230,16 +224,19 @@ private:
 	void createTableFor_endGame(COORD pos_top_left, COORD pos_bottom_right);
 	void createTableOfInfomationFor_historyPage(Data_of_each_game &data, int distance_from_the_previous);
 	void changeMode();
+	int pauseGame();
 public:
 	Snake();
 	~Snake();
-	int pauseGame();
+	std::vector<POINT> snake;	
 	Wall wall; 
 	int4 point;
 	Difficulty hard;
 	int4 length;
 	char mode;
+	POINT food;
 	int4 time_use;
+	int4 time_left;
 	time_t time_start;
 	bool allowed_for_continue;
 	void printSnake();
@@ -261,3 +258,6 @@ public:
 	int gamePlayPage();
 	int historyPage(File& file);
 };
+
+void updateDataTo_continueFile(Snake& snake);
+void readDataFrom_continueFile(Snake& snake);
