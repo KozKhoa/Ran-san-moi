@@ -111,3 +111,94 @@ else if (data.mode == MODE_FREEDOM) {
 	std::wcout << L"TIME USE: " << data.time_finish;
 }
 _setmode(_fileno(stdout), _O_TEXT);*/
+
+
+//GotoXY(0, screenInfo.dwSize.Y - 1);
+//printf(STRING_VERSION);
+//Notifi notifi;
+//notifi.readyClock();
+//cls();
+//GotoXY(0, screenInfo.dwSize.Y - 1);
+//printf(STRING_VERSION);
+//createWall();
+//createStatus();
+//printSnake();
+//bool restart_game = true;
+//int4 action = -1;
+//int4 event = -1;
+
+//updateTime(9999);
+//time_start = time(0);
+//while (!checkGameOver()) {
+//	if ((mode == MODE_CLASSIC) && (!updateTime(notifi.countDownClock(hard.limit_time, restart_game)))) {
+//		action = endGame(TIME_UP);
+//		allowed_for_continue = false;
+//		break;
+//	}
+//	else if (mode == MODE_FREEDOM) {
+//		updateTime(notifi.countClock(restart_game));
+//	}
+//	if (_kbhit() && (event = _getch()));
+//	if (event == CODE_BACKSPACE) {
+//		if (pauseTable() == GOTO_HOME_PAGE) {
+//			action = GOTO_HOME_PAGE;
+//			break;
+//		}
+//		printSnake();
+//		GotoXY(food.x, food.y);
+//		printf("%c", CHAR_FOOD);
+//	}
+//	changeDirection(event);
+//	moveSnack();
+//	checkEatFood();
+//	speedGame();
+//}
+
+//if (action == -1) { // tức là thoát vì game over chứ không phải hết giờ
+//	action = endGame(STRING_GAME_OVER);
+//	allowed_for_continue = false;
+//}
+//deleteWall();
+//return action;
+
+
+/*cls();
+		int move = action.top();
+		if (move == GOTO_HOME_PAGE) {
+			cls();
+			action.push(snake.homePage());
+			continue;
+		}
+		if (move == GOTO_DIFFICULTY_PAGE) {
+			cls();
+			action.push(snake.difficultyPage());
+			continue;
+		}
+		if (move == GOTO_GAMEPLAY_PAGE) {
+			cls();
+			action.push(snake.gamePlayPage());
+			if (action.top() != GOTO_CONTINUE_GAME) {
+				snake.resetSnakeData();
+				data_file.updateToData(snake.hard.difficulty, snake.mode, snake.point, snake.hard.speed, snake.length, snake.time_use, snake.time_start);
+				data_file.writeDataToFile();
+			}
+			continue;
+		}
+		if (move == GOTO_CONTINUE_GAME) {
+			cls();
+			if (snake.checkGameOver()) {
+				notifi.printNoDataFound();
+				contine;
+			}
+			action.push(snake.gamePlayPage());
+			continue;
+		}
+		if (move == GOTO_HISTORY_PAGE) {
+			cls();
+			action.push(snake.historyPage(data_file));
+			continue;
+		}
+		if (move == GOTO_EXIT) {
+			cls();
+			break;
+		}*/

@@ -9,6 +9,7 @@
 #include <io.h>    // khai báo để dùng _setmode, xuất tiếng việt
 #include <time.h>
 #include "file.h"
+#include <string>
 
 #ifndef _DEFINE_CAC_THU_
 
@@ -57,7 +58,7 @@
 	#define STRING_NEW_GAME "NEW GAME"
 	#define STRING_CONTINUE "CONTINUE"
 	#define STRING_HISTORY "HISTORY"
-	#define STRING_OPTIONS "OPTIONS"
+	#define STRING_SETTINGS "SETTINGS"
 	#define STRING_MODE_GAME "MODE : "
 
 	#define DISTANCE_FROM_NEW_GAME DISTANCE_FROM_MODE_GAME_CHAR + 3
@@ -183,6 +184,10 @@
 #define LOSE_BY_TIME_UP 2247
 #define NOT_LOSE 2348
 
+#define FILE_NAME_DATA_FOR_HISTORY_FILE L"data_for_history_file.bin"
+#define FILE_NAME_DATA_FOR_CONTINUE_GAME L"data_for_continue_game.bin"
+#define FILE_NAME_DATA_FOR_SETTINGS_FILE L"data_for_settings_file.bin"
+
 #endif // !_DEFINE_CAC_THU_
 
 using int4 = int32_t;
@@ -211,23 +216,27 @@ private:
 	char prev_head_direction;
 	int4 bonus_speed; // cân nhắc xóa biến nảy ra khỏi chương trình
 
-	int choice(int num_of_choice, COORD pos_of_first_choice, int distance_between_each_choice);
+	int4 choice(int4 num_of_choice, COORD pos_of_first_choice, int4 distance_between_each_choice, int4 start_code = 0);
 	void inDauRan();
 	void themDotRan();
 	void inDuoiRan();
 	void inCoRan();
 	void setupWall();
-	int chooseDifficulty();
-	void printDIFFICULTY_character(int distance_from_top, int distance_from_left);
-	void printSNAKES_character(int distance_from_top, int distance_from_left);
-	int chooseHome();
+	int4 chooseDifficulty();
+	void printDIFFICULTY_character(int4 distance_from_top, int4 distance_from_left);
+	void printSNAKES_character(int4 distance_from_top, int4 distance_from_left);
+	int4 chooseHome();
 	void createTableFor_endGame(COORD pos_top_left, COORD pos_bottom_right);
-	void createTableOfInfomationFor_historyPage(Data_of_each_game &data, int distance_from_the_previous);
+	void createTableOfInfomationFor_historyPage(Data_of_each_game &data, int4 distance_from_the_previous);
 	void changeMode();
-	int pauseGame();
+	int4 pauseGame();
+	void initilizeForSettingsFile(std::vector<std::vector<std::string> > &content);
+	int4 choice_vip(std::vector<std::vector<std::string> >& content);
+	void chooseSettingsPage(int4 code1, int4 code2);
 public:
 	Snake();
 	~Snake();
+
 	std::vector<POINT> snake;	
 	Wall wall; 
 	int4 point;
@@ -239,13 +248,16 @@ public:
 	int4 time_left;
 	time_t time_start;
 	bool allowed_for_continue;
+	int4 snake_color;
+	int4 wall_color;
+
 	void printSnake();
 	void moveSnack();
-	void changeDirection(int event);
+	void changeDirection(int4 event);
 	void createWall();
 	void deleteWall();
-	int checkGameOver();
-	int endGame(const wchar_t* content);
+	int4 checkGameOver();
+	int4 endGame(const wchar_t* content);
 	void randomFood();
 	bool checkEatFood();
 	void speedGame();
@@ -253,11 +265,15 @@ public:
 	void createStatus();
 	void updateStatus();
 	bool updateTime(int4 sec); // trả về true nếu còn thời gian, trả về false nếu hết thời gian
-	int difficultyPage();
-	int homePage();
-	int gamePlayPage();
-	int historyPage(File& file);
+	int4 difficultyPage();
+	int4 homePage();
+	int4 gamePlayPage();
+	int4 historyPage(File& file);
+	int4 settingsPage();
 };
 
 void updateDataTo_continueFile(Snake& snake);
 void readDataFrom_continueFile(Snake& snake);
+void clearAllFileContent(wchar_t* file_name);
+void readDataFrom_settingsFile(Snake& snake);
+void writeDataTo_settingsFile(Snake& snake);

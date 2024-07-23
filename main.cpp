@@ -7,7 +7,7 @@
 #include "file.h"
 
 
-int mai() {
+int ai() {
 	showPointer(turnOffPointer);
 	Snake snake;
 	Notifi notifi;
@@ -19,16 +19,16 @@ int mai() {
 	return 0;
 }
 
-int4 main() {
+int4 mai() {
 	SetConsoleTitle(L"GAME RẮN SĂN MỒI");
 	showPointer(turnOffPointer);
 	Snake snake;
 	File data_file;
 	Notifi notifi;
-	//data_file.getDataFromFile();
 	std::stack<int> action;
 	action.push(GOTO_HOME_PAGE);
 	std::stack<Snake> contine; // dùng cho mục continue
+	readDataFrom_settingsFile(snake);
 	while (!action.empty()) {
 		int event = action.top();
 		action.pop();
@@ -43,12 +43,15 @@ int4 main() {
 			if (snake.allowed_for_continue == false) {
 				data_file.updateToDataFor_history(snake.hard.difficulty, snake.mode, snake.point, snake.hard.speed, snake.length, snake.time_use, snake.time_start);
 				data_file.writeDataToFile_history();
-				snake.resetSnakeData();
 			}
+			updateDataTo_continueFile(snake);
+			snake.resetSnakeData();
 		}
 		else if (event == GOTO_CONTINUE_GAME) {
+			readDataFrom_continueFile(snake);
 			if (snake.allowed_for_continue == false) {
 				action.push(GOTO_HOME_PAGE);
+				snake.resetSnakeData();
 				notifi.printNoDataFound();
 			}
 			else {
@@ -66,47 +69,8 @@ int4 main() {
 	// CẦN FIX LỖI KHI VÀO CHƠI CONTINUE THÌ LẠI BỊ RESET TIME LẠI BAN ĐẦU
 	// CẦN PHẢI XỬ LÍ CÁI TIME - THỜI GIAN CÒN LẠI KHI CHƠI CONTINUE NẾU KHÔNG THÌ THỜI GIAN SẼ BỊ ĐẶT SAI
 	// XỬ LÍ LÔI KO HIỂN THỊ VÍ TRÍ CỦA THỨC ĂN NGAY KHI VỪA MỚI VÀO 
+	// BUG XẢY RA KHI TA CHƠI GAME MỚI A VÀ PAUSE GIỮA CHỪNG, SAU ĐÓ LẠI CHƠI GAME MỚI B VÀ THUA, KẾ TIẾP LÀ THÓAT CHƯƠNG TRÌNH, RỒI VÀO LẠI 
+	//		CHƯƠNG TRÌNH, KHI NÀY THÌ ẤN CONTINUE THÌ GAME LẠI TIẾP TỤC MÀN CHƠI A BAN ĐẦU MÀ THAY VÌ ĐÁNG LẼ NÊN THÔNG BÁO LÀ KO CÓ DỮ LIỆU
 
 	return 0;
 }
-
-/*cls();
-		int move = action.top();
-		if (move == GOTO_HOME_PAGE) {
-			cls();
-			action.push(snake.homePage());
-			continue;
-		}
-		if (move == GOTO_DIFFICULTY_PAGE) {
-			cls();
-			action.push(snake.difficultyPage());
-			continue;
-		}
-		if (move == GOTO_GAMEPLAY_PAGE) {
-			cls();
-			action.push(snake.gamePlayPage());
-			if (action.top() != GOTO_CONTINUE_GAME) {
-				snake.resetSnakeData();
-				data_file.updateToData(snake.hard.difficulty, snake.mode, snake.point, snake.hard.speed, snake.length, snake.time_use, snake.time_start);
-				data_file.writeDataToFile();
-			}
-			continue;
-		}
-		if (move == GOTO_CONTINUE_GAME) {
-			cls();
-			if (snake.checkGameOver()) {
-				notifi.printNoDataFound();
-				contine;
-			}
-			action.push(snake.gamePlayPage());
-			continue;
-		}
-		if (move == GOTO_HISTORY_PAGE) {
-			cls();
-			action.push(snake.historyPage(data_file));
-			continue;
-		}
-		if (move == GOTO_EXIT) {
-			cls();
-			break;
-		}*/

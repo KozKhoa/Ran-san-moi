@@ -45,7 +45,7 @@ Snake::~Snake() {
 	snake.resize(0);
 }
 
-int4 Snake::choice(int4 num_of_choice, COORD pos_of_first_choice, int4 distance_between_each_choice) {
+int4 Snake::choice(int4 num_of_choice, COORD pos_of_first_choice, int4 distance_between_each_choice, int4 start_code) {
 	if (num_of_choice <= 0) {
 		return -1;
 	}
@@ -55,10 +55,19 @@ int4 Snake::choice(int4 num_of_choice, COORD pos_of_first_choice, int4 distance_
 		choice_y[i] = choice_y[i - 1] + distance_between_each_choice;
 	}
 	int4 code_keyboard = 0;
-	int4 code = 0;
+	int4 code = start_code;
 
 	int4 pos_of_pointer_char_left_X = pos_of_first_choice.X - 10;
 	int4 pos_of_pointer_char_right_X = pos_of_first_choice.X + 10;
+
+	setColor(BLACK, BLACK);
+	for (int4 i = 0; i < num_of_choice; i++) {
+		GotoXY(pos_of_pointer_char_left_X, choice_y[i]);
+		printf("%c", POINTER_CHAR_LEFT);
+		GotoXY(pos_of_pointer_char_right_X, choice_y[i]);
+		printf("%c", POINTER_CHAR_RIGHT);
+	}
+	setColor(BLACK, WHITE);
 
 	GotoXY(pos_of_pointer_char_left_X, choice_y[code]);
 	printf("%c", POINTER_CHAR_LEFT);
@@ -741,9 +750,9 @@ int4 Snake::homePage() {
 	setColor(BLACK, AQUA);
 	printf(STRING_HISTORY);
 
-	GotoXY(screenInfo.dwSize.X / 2 - strlen(STRING_HISTORY) / 2, DISTANCE_FROM_HISTORY);
+	GotoXY(screenInfo.dwSize.X / 2 - strlen(STRING_SETTINGS) / 2, DISTANCE_FROM_HISTORY);
 	setColor(BLACK, LIGHT_PURPLE);
-	printf(STRING_OPTIONS);
+	printf(STRING_SETTINGS);
 
 	GotoXY(screenInfo.dwSize.X / 2 - strlen(EXIT) / 2, DISTANCE_FROM_OPTION);
 	setColor(BLACK, RED);
@@ -842,13 +851,13 @@ int4 Snake::gamePlayPage() {
 	printSnake();
 	while ((reason_for_lose = checkGameOver()) && (reason_for_lose == NOT_LOSE)) {
 		if (mode == MODE_CLASSIC) {
-			if (updateTime(time_left - notifi.countClock(hard.limit_time, reset_time)) == 0) {
+			if (updateTime(time_left - notifi.countClock( reset_time)) == 0) {
 				reason_for_lose = LOSE_BY_TIME_UP;
 				break;
 			}
 		}
 		else if (mode == MODE_FREEDOM) {
-			updateTime(notifi.countClock(hard.limit_time, reset_time) + time_left);
+			updateTime(notifi.countClock(reset_time) + time_left);
 		}
 
 		int4 event = -1;
@@ -1012,9 +1021,215 @@ int4 Snake::historyPage(File& file) {
 	return GOTO_HOME_PAGE;
 }
 
+void Snake::initilizeForSettingsFile(std::vector<std::vector<std::string> > &content) {
+	content.resize(3);
+
+	content[0].resize(8);
+	content[0][0] = "SNAKE COLOR";
+	content[0][1] = "BLUE";
+	content[0][2] = "GREEN";
+	content[0][3] = "AQUA";
+	content[0][4] = "RED";
+	content[0][5] = "PURPLE";
+	content[0][6] = "YELLOW";
+	content[0][7] = "WHITE";
+
+	content[1].resize(8);
+	content[1][0] = "WALL COLOR";
+	content[1][1] = "BLUE";
+	content[1][2] = "GREEN";
+	content[1][3] = "AQUA";
+	content[1][4] = "RED";
+	content[1][5] = "PURPLE";
+	content[1][6] = "YELLOW";
+	content[1][7] = "WHITE";
+
+	content[2].resize(3);
+	content[2][0] = "DELETE HISTORY";
+	content[2][1] = "YES";
+	content[2][2] = "NO";
+}
+
+
+int4 Snake::choice_vip(std::vector<std::vector<std::string> >& content) {
+	int4 Distance_from_top = 3;
+
+	//int* choice = new int[content.size()];
+	//choice[0] = 0;
+	//choice[1] = 0;
+	int4 i = 0;
+	int4 j = 0;
+	std::cout << std::setfill(' ');
+
+	while (true) {
+		if (_kbhit()) {
+			int4 event = _getch();
+			int4 old_i = i;
+			int4 old_j = j;
+			if (event == CODE_DOWN_ARROW) {
+				j++;
+			}
+			else if (event == CODE_UP_ARROW) {
+				j--;
+			}
+			else if (event == CODE_RIGHT_ARROW) {
+				if (i < 1) {
+					i++;
+				}
+			}
+			else if (event == CODE_LEFT_ARROW) {
+				if (i > 0) {
+					i--;
+				}
+			} 
+			else if (event == CODE_ENTER) {
+				if (i == 0) {
+					j++;
+				}
+				else {
+
+				}
+			}
+
+			if (j >= content[i].size()) {
+				j = 0;
+			}
+			else if (j < 0) {
+				j = content[i].size() - 1;
+			}
+
+			GotoXY(old_i * 50 + 1, Distance_from_top + old_j * 2);
+			std::cout << std::setw(50) << content[old_i][old_j];
+
+
+			setColor(WHITE, BLACK);
+			GotoXY(i * 50 + 1, Distance_from_top + j * 2);
+			std::cout << std::setw(50) << content[i][j];
+			setColor(BLACK, WHITE);
+		}
+	}
+
+
+
+
+	//delete[] choice;
+	return 0;
+}
+
+void Snake::chooseSettingsPage(int4 code1, int4 code2) {
+	if (code1 == 0) {
+		if (code2 == 0) {
+			snake_color = BLUE;
+		}
+		else if (code2 == 1) {
+			snake_color = GREEN;
+		}
+		else if (code2 == 2) {
+			snake_color = AQUA;
+		}
+		else if (code2 == 3) {
+			snake_color = RED;
+		}
+		else if (code2 == 4) {
+			snake_color = PURPULE;
+		}
+		else if (code2 == 5) {
+			snake_color = YELLOW;
+		}
+		else if (code2 == 6) {
+			snake_color = WHITE;
+		}
+	}
+	else if (code1 == 1) {
+		if (code2 == 0) {
+			wall_color = BLUE;
+		}
+		else if (code2 == 1) {
+			wall_color = GREEN;
+		}
+		else if (code2 == 2) {
+			wall_color = AQUA;
+		}
+		else if (code2 == 3) {
+			wall_color = RED;
+		}
+		else if (code2 == 4) {
+			wall_color = PURPULE;
+		}
+		else if (code2 == 5) {
+			wall_color = YELLOW;
+		}
+		else if (code2 == 6) {
+			wall_color = WHITE;
+		}
+	}
+	else if (code1 == 2) {
+		if (code2 == 0) {
+			wchar_t* file_name = new wchar_t[wcslen(FILE_NAME_DATA_FOR_HISTORY_FILE)];
+			clearAllFileContent(file_name);
+			delete[] file_name;
+		}
+	}
+}
+
+int4 Snake::settingsPage() {
+	std::vector<std::vector<std::string> > content;
+
+	int4 Distance_from_top = 3;
+	
+	initilizeForSettingsFile(content);
+
+	for (int4 i = 0; i < content.size(); i++) {
+		GotoXY(10 , Distance_from_top + i * 2);
+		std::cout << content[i][0];
+	}
+	COORD pos_of_first_choice1 = { 16, Distance_from_top };
+	COORD pos_of_first_choice2 = { 65, Distance_from_top };
+	int4 code1 = 0;
+	int4 code2 = 0;
+	while (true) {
+		code1 = choice(3, pos_of_first_choice1, 2, code1) - 1;
+
+		for (int4 i = 1; i < content[code1].size(); i++) {
+			GotoXY(60, Distance_from_top + (i - 1) * 2);
+			std::cout << content[code1][i];
+		}
+		code2 = choice(content[code1].size() - 1, pos_of_first_choice2, 2) - 1;
+
+		setColor(BLACK, BLACK);
+		for (int4 i = 1; i < content[code1].size(); i++) {
+			GotoXY(50, Distance_from_top + (i - 1) * 2);
+			std::cout << content[code1][i] << std::setw(30) << " ";
+		}
+		setColor(BLACK, WHITE);
+
+		chooseSettingsPage(code1, code2);		
+	}
+
+
+
+	return 0;
+}
+
+/*
+for (int4 j = 1; j < content[i].size(); j++) {
+			GotoXY(51, Distance_from_top + i * 2 + j * 2);
+			std::cout << content[i][j];
+		}
+
+		std::cout << std::setfill(' ');
+	for (int4 i = 0; i < content.size(); i++) {
+		GotoXY(1, Distance_from_top + i * 2);
+		std::cout << std::setw(50) << std::left << content[i][0];
+
+	}
+*/
+
+
+
 void updateDataTo_continueFile(Snake &snake) {
 	wchar_t continue_file_name[] = L"data_for_continue_game.bin";
-	HANDLE hfile = CreateFileW(continue_file_name, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE hfile = CreateFileW(FILE_NAME_DATA_FOR_CONTINUE_GAME, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hfile == INVALID_HANDLE_VALUE) { throw std::exception("Cannot open file to write"); };
 	DWORD write_success;
 
@@ -1033,7 +1248,7 @@ void updateDataTo_continueFile(Snake &snake) {
 
 void readDataFrom_continueFile(Snake& snake) {
 	wchar_t continue_file_name[] = L"data_for_continue_game.bin";
-	HANDLE hfile = CreateFileW(continue_file_name, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE hfile = CreateFileW(FILE_NAME_DATA_FOR_CONTINUE_GAME, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hfile == INVALID_HANDLE_VALUE) { throw std::exception("Cannot open file to read"); };
 	DWORD read_success;
 
@@ -1047,6 +1262,44 @@ void readDataFrom_continueFile(Snake& snake) {
 	ReadFile(hfile, &snake.snake[0], sizeof(snake.snake[0]) * snake.length, &read_success, NULL);
 	ReadFile(hfile, &snake.allowed_for_continue, sizeof(snake.allowed_for_continue), &read_success, NULL);
 
+
+	CloseHandle(hfile);
+	hfile = NULL;
+}
+
+void clearAllFileContent(wchar_t* file_name) {
+	HANDLE hfile = CreateFileW(L"input.bin", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	CloseHandle(hfile);
+	hfile = NULL;
+}
+
+void readDataFrom_settingsFile(Snake& snake) {
+	/*
+	File này trước mắt thì lưu màu rắn với màu tường thôi;
+	*/
+
+	HANDLE hfile = CreateFileW(FILE_NAME_DATA_FOR_SETTINGS_FILE, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hfile == INVALID_HANDLE_VALUE) {
+		throw std::exception("Cannot open file");
+	}
+
+	DWORD read_success;
+	ReadFile(hfile, &snake.snake_color, sizeof(snake.snake_color), &read_success, NULL);
+	ReadFile(hfile, &snake.wall_color, sizeof(snake.wall_color), &read_success, NULL);
+
+	CloseHandle(hfile);
+	hfile = NULL;
+}
+
+void writeDataTo_settingsFile(Snake& snake) {
+	HANDLE hfile = CreateFileW(FILE_NAME_DATA_FOR_SETTINGS_FILE, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hfile == INVALID_HANDLE_VALUE) {
+		throw std::exception("Cannot open file");
+	}
+		
+	DWORD write_success;
+	WriteFile(hfile, &snake.snake_color, sizeof(snake.snake_color), &write_success, NULL);
+	WriteFile(hfile, &snake.wall_color, sizeof(snake.wall_color), &write_success, NULL);
 
 	CloseHandle(hfile);
 	hfile = NULL;
