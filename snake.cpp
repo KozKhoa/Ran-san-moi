@@ -33,6 +33,9 @@ Snake::Snake() {
 	time_start = time(0);
 	time_left = 0;
 
+	snake_color = WHITE;
+	wall_color = WHITE;
+
 	allowed_for_continue = false;
 	exist_food = false;
 
@@ -110,6 +113,75 @@ int4 Snake::choice(int4 num_of_choice, COORD pos_of_first_choice, int4 distance_
 	return code + 1; // trả về thứ tự của lựa chọn đã chọn
 }
 
+int4 Snake::choice_allowed_for_exit(int4 num_of_choice, COORD pos_of_first_choice, int4 distance_between_each_choice, int4 start_code) {
+	if (num_of_choice <= 0) {
+		return -1;
+	}
+	int4* choice_y = new int4[num_of_choice];
+	choice_y[0] = pos_of_first_choice.Y;
+	for (int4 i = 1; i < num_of_choice; i++) {
+		choice_y[i] = choice_y[i - 1] + distance_between_each_choice;
+	}
+	int4 code_keyboard = 0;
+	int4 code = start_code;
+
+	int4 pos_of_pointer_char_left_X = pos_of_first_choice.X - 10;
+	int4 pos_of_pointer_char_right_X = pos_of_first_choice.X + 10;
+
+	setColor(BLACK, BLACK);
+	for (int4 i = 0; i < num_of_choice; i++) {
+		GotoXY(pos_of_pointer_char_left_X, choice_y[i]);
+		printf("%c", POINTER_CHAR_LEFT);
+		GotoXY(pos_of_pointer_char_right_X, choice_y[i]);
+		printf("%c", POINTER_CHAR_RIGHT);
+	}
+	setColor(BLACK, WHITE);
+
+	GotoXY(pos_of_pointer_char_left_X, choice_y[code]);
+	printf("%c", POINTER_CHAR_LEFT);
+	GotoXY(pos_of_pointer_char_right_X, choice_y[code]);
+	printf("%c", POINTER_CHAR_RIGHT);
+
+	while (true) {
+		if (_kbhit()) {
+			code_keyboard = _getch();
+			int4 old_code = code;
+			if (code_keyboard == CODE_UP_ARROW || code_keyboard == 'w' || code_keyboard == 'W') {
+				code--;
+			}
+			else if (code_keyboard == CODE_DOWN_ARROW || code_keyboard == 's' || code_keyboard == 'S') {
+				code++;
+			}
+			else if (code_keyboard == CODE_ENTER) {
+				break;
+			}
+			else if (code_keyboard == CODE_BACKSPACE) {
+				code = -2;
+				break;
+			}
+
+			if (code < 0) {
+				code = num_of_choice - 1;
+			}
+			else if (code >= num_of_choice) {
+				code = 0;
+			}
+			GotoXY(pos_of_pointer_char_left_X, choice_y[old_code]);
+			printf(" ");
+			GotoXY(pos_of_pointer_char_right_X, choice_y[old_code]);
+			printf(" ");
+
+			GotoXY(pos_of_pointer_char_left_X, choice_y[code]);
+			printf("%c", POINTER_CHAR_LEFT);
+			GotoXY(pos_of_pointer_char_right_X, choice_y[code]);
+			printf("%c", POINTER_CHAR_RIGHT);
+		}
+	}
+	delete[] choice_y;
+
+	return code + 1; // trả về thứ tự của lựa chọn đã chọn
+}
+
 void Snake::setupWall() {
 	wall.top_left.x = screenInfo.dwSize.X / TI_LE_TUONG_CHIEU_DAI;
 	wall.top_left.y = screenInfo.dwSize.Y / TI_LE_TUONG_CHIEU_CAO + 2;
@@ -126,10 +198,12 @@ void Snake::setupWall() {
 }
 
 void Snake::printSnake() {
+	setColor(BLACK, snake_color);
 	for (int4 i = length - 1; i >= 0; i--) {
 		GotoXY(snake[i].x, snake[i].y);
 		printf("%c", HINH_DOT_RAN);
 	}
+	setColor(BLACK, WHITE);
 }
 
 void Snake::inDauRan() {
@@ -146,11 +220,14 @@ void Snake::inDauRan() {
 }
 
 void Snake::inDuoiRan() {
+	setColor(BLACK, snake_color);
 	GotoXY(snake[0].x, snake[0].y);
 	printf("%c", HINH_DUOI_RAN);
+	setColor(BLACK, WHITE);
 }
 
 void Snake::inCoRan() {
+	setColor(BLACK, snake_color);
 	GotoXY(snake[length - 2].x, snake[length - 2].y);
 	if (prev_head_direction == head_direction) {
 		if (head_direction == 'u' || head_direction == 'd') {
@@ -175,6 +252,7 @@ void Snake::inCoRan() {
 		}
 		prev_head_direction = head_direction;
 	}
+	setColor(BLACK, WHITE);
 }
 
 void Snake::speedGame() {
@@ -231,7 +309,7 @@ void Snake::changeDirection(int4 event) {
 }
 
 void Snake::createWall() {
-	setColor(GRAY, WHITE);
+	setColor(wall_color, WHITE);
 	GotoXY(wall.top_left.x, wall.top_left.y);
 	std::cout << WALL_TOP_LEFT;
 	std::cout << std::setfill(WALL_TOP) << std::setw(wall.top_right.x - wall.top_left.x);
@@ -563,76 +641,23 @@ int4 Snake::difficultyPage() {
 
 int4 Snake::chooseDifficulty() {
 	COORD pos_of_first_choice = { screenInfo.dwSize.X / 2, POS_OF_EASY_Y };
-	//int4 code = choice(3, pos_of_first_choice, 3);
-	int4 num_of_choice = 3;
-	int4* choice_y = new int4[num_of_choice];
-	choice_y[0] = pos_of_first_choice.Y;
-	for (int4 i = 1; i < num_of_choice; i++) {
-		choice_y[i] = choice_y[i - 1] + 3;
-	}
-	int4 code_keyboard = 0;
-	int4 code = 0;
+	int4 code = choice_allowed_for_exit(3, pos_of_first_choice, 3);
 
-	int4 pos_of_pointer_char_left_X = pos_of_first_choice.X - 10;
-	int4 pos_of_pointer_char_right_X = pos_of_first_choice.X + 10;
-
-	GotoXY(pos_of_pointer_char_left_X, choice_y[code]);
-	printf("%c", POINTER_CHAR_LEFT);
-	GotoXY(pos_of_pointer_char_right_X, choice_y[code]);
-	printf("%c", POINTER_CHAR_RIGHT);
-
-	while (true) {
-		if (_kbhit()) {
-			code_keyboard = _getch();
-			int4 old_code = code;
-			if (code_keyboard == CODE_UP_ARROW || code_keyboard == 'w' || code_keyboard == 'W') {
-				code--;
-			}
-			else if (code_keyboard == CODE_DOWN_ARROW || code_keyboard == 's' || code_keyboard == 'S') {
-				code++;
-			}
-			else if (code_keyboard == CODE_ENTER) {
-				break;
-			}
-			else if (code_keyboard == CODE_BACKSPACE) {
-				code = -1;
-				break;
-			}
-
-			if (code < 0) {
-				code = num_of_choice - 1;
-			}
-			else if (code >= num_of_choice) {
-				code = 0;
-			}
-			GotoXY(pos_of_pointer_char_left_X, choice_y[old_code]);
-			printf(" ");
-			GotoXY(pos_of_pointer_char_right_X, choice_y[old_code]);
-			printf(" ");
-
-			GotoXY(pos_of_pointer_char_left_X, choice_y[code]);
-			printf("%c", POINTER_CHAR_LEFT);
-			GotoXY(pos_of_pointer_char_right_X, choice_y[code]);
-			printf("%c", POINTER_CHAR_RIGHT);
-		}
-	}
-	delete[] choice_y;
-
-	if (code == 0) {
+	if (code == 1) {
 		hard.difficulty = 'e';
 		hard.limit_time = LIMIT_TIME_EASY;
 		hard.plus_point = PLUS_POINT_EASY;
 		hard.speed = SPEED_EASY;
 		hard.minus_speed = MINUS_SPEED_EASY;
 	}
-	else if (code == 1) {
+	else if (code == 2) {
 		hard.difficulty = 'm';
 		hard.limit_time = LIMIT_TIME_MEDIUM;
 		hard.plus_point = PLUS_POINT_MEDIUM;
 		hard.speed = SPEED_MEDIUM;
 		hard.minus_speed = MINUS_SPEED_MEDIUM;
 	}
-	else if (code == 2) {
+	else if (code == 3) {
 		hard.difficulty = 'h';
 		hard.limit_time = LIMIT_TIME_HARD;
 		hard.plus_point = PLUS_POINT_HARD;
@@ -775,7 +800,7 @@ int4 Snake::homePage() {
 		return GOTO_HISTORY_PAGE;
 	}
 	if (action == 5) {
-		return GOTO_OPTIONS_PAGE;
+		return GOTO_SETTINGS_PAGE;
 	}
 	if (action == 6) {
 		return GOTO_EXIT;
@@ -845,7 +870,7 @@ int4 Snake::gamePlayPage() {
 
 	int4 reason_for_lose = 0;
 	bool reset_time = true;
-	if (allowed_for_continue == false) {
+	if (allowed_for_continue == false && mode == MODE_CLASSIC) {
 		time_left = hard.limit_time;
 	}
 	printSnake();
@@ -1021,7 +1046,7 @@ int4 Snake::historyPage(File& file) {
 	return GOTO_HOME_PAGE;
 }
 
-void Snake::initilizeForSettingsFile(std::vector<std::vector<std::string> > &content) {
+void Snake::initilizeForSettingsFile(std::vector<std::vector<std::string> >& content, std::vector<int4> &color) {
 	content.resize(3);
 
 	content[0].resize(8);
@@ -1048,72 +1073,16 @@ void Snake::initilizeForSettingsFile(std::vector<std::vector<std::string> > &con
 	content[2][0] = "DELETE HISTORY";
 	content[2][1] = "YES";
 	content[2][2] = "NO";
-}
 
+	color.resize(7);
+	color[0] = BLUE;
+	color[1] = GREEN;
+	color[2] = AQUA;
+	color[3] = RED;
+	color[4] = PURPULE;
+	color[5] = YELLOW;
+	color[6] = WHITE;
 
-int4 Snake::choice_vip(std::vector<std::vector<std::string> >& content) {
-	int4 Distance_from_top = 3;
-
-	//int* choice = new int[content.size()];
-	//choice[0] = 0;
-	//choice[1] = 0;
-	int4 i = 0;
-	int4 j = 0;
-	std::cout << std::setfill(' ');
-
-	while (true) {
-		if (_kbhit()) {
-			int4 event = _getch();
-			int4 old_i = i;
-			int4 old_j = j;
-			if (event == CODE_DOWN_ARROW) {
-				j++;
-			}
-			else if (event == CODE_UP_ARROW) {
-				j--;
-			}
-			else if (event == CODE_RIGHT_ARROW) {
-				if (i < 1) {
-					i++;
-				}
-			}
-			else if (event == CODE_LEFT_ARROW) {
-				if (i > 0) {
-					i--;
-				}
-			} 
-			else if (event == CODE_ENTER) {
-				if (i == 0) {
-					j++;
-				}
-				else {
-
-				}
-			}
-
-			if (j >= content[i].size()) {
-				j = 0;
-			}
-			else if (j < 0) {
-				j = content[i].size() - 1;
-			}
-
-			GotoXY(old_i * 50 + 1, Distance_from_top + old_j * 2);
-			std::cout << std::setw(50) << content[old_i][old_j];
-
-
-			setColor(WHITE, BLACK);
-			GotoXY(i * 50 + 1, Distance_from_top + j * 2);
-			std::cout << std::setw(50) << content[i][j];
-			setColor(BLACK, WHITE);
-		}
-	}
-
-
-
-
-	//delete[] choice;
-	return 0;
 }
 
 void Snake::chooseSettingsPage(int4 code1, int4 code2) {
@@ -1165,67 +1134,94 @@ void Snake::chooseSettingsPage(int4 code1, int4 code2) {
 	}
 	else if (code1 == 2) {
 		if (code2 == 0) {
-			wchar_t* file_name = new wchar_t[wcslen(FILE_NAME_DATA_FOR_HISTORY_FILE)];
+			wchar_t file_name[] = FILE_NAME_DATA_FOR_HISTORY_FILE;
 			clearAllFileContent(file_name);
-			delete[] file_name;
+			/*wchar_t* file_name = new WCHAR[wcslen(FILE_NAME_DATA_FOR_HISTORY_FILE)];
+			lstrcpy(file_name, FILE_NAME_DATA_FOR_HISTORY_FILE);
+			clearAllFileContent(file_name);
+			delete[] file_name;*/
+
 		}
 	}
 }
 
 int4 Snake::settingsPage() {
-	std::vector<std::vector<std::string> > content;
+	GotoXY(0, 0);
+	std::cout << POINTER_CHAR_RIGHT << " BACKSPACE";
+	GotoXY(0, screenInfo.dwSize.Y - 1);
+	std::cout << STRING_VERSION;
 
+	std::vector<std::vector<std::string> > content;
+	std::vector<int4> color;
 	int4 Distance_from_top = 3;
 	
-	initilizeForSettingsFile(content);
+	initilizeForSettingsFile(content, color);
 
 	for (int4 i = 0; i < content.size(); i++) {
 		GotoXY(10 , Distance_from_top + i * 2);
 		std::cout << content[i][0];
 	}
+	std::cout << "\n\n\n\nNote:\n\n- You can't change the\nsnake's head color.\n\n- Snake's head must be white.";
+	GotoXY(40, 0);
+	std::cout << char(203);
+	for (int4 i = 1; i < screenInfo.dwSize.Y - 1; i++) {
+		GotoXY(40, i);
+		std::cout << WALL_LEFT;
+	}
+	GotoXY(40, screenInfo.dwSize.Y - 1);
+	std::cout << char(202);
 	COORD pos_of_first_choice1 = { 16, Distance_from_top };
 	COORD pos_of_first_choice2 = { 65, Distance_from_top };
 	int4 code1 = 0;
 	int4 code2 = 0;
 	while (true) {
-		code1 = choice(3, pos_of_first_choice1, 2, code1) - 1;
+		GotoXY(0, Distance_from_top);
+		setColor(snake_color, snake_color);
+		std::cout << std::setw(3) << " ";
+
+		GotoXY(0, Distance_from_top + 2);
+		setColor(wall_color, wall_color);
+		std::cout << std::setw(3) << " ";
+
+		setColor(BLACK, WHITE);
+		code1 = choice_allowed_for_exit(3, pos_of_first_choice1, 2, code1) - 1;
+
+		if (code1 < 0) {
+			break;
+		}
 
 		for (int4 i = 1; i < content[code1].size(); i++) {
+			if (code1 == 0 || code1 == 1) {
+				GotoXY(41, Distance_from_top + (i - 1) * 2);
+				setColor(color[i - 1], color[i - 1]);
+				std::cout << std::setw(3) << " ";
+				setColor(BLACK, WHITE);
+			}
 			GotoXY(60, Distance_from_top + (i - 1) * 2);
 			std::cout << content[code1][i];
 		}
+
 		code2 = choice(content[code1].size() - 1, pos_of_first_choice2, 2) - 1;
 
 		setColor(BLACK, BLACK);
 		for (int4 i = 1; i < content[code1].size(); i++) {
-			GotoXY(50, Distance_from_top + (i - 1) * 2);
-			std::cout << content[code1][i] << std::setw(30) << " ";
+			GotoXY(41, Distance_from_top + (i - 1) * 2);
+			std::cout << content[code1][i] << std::setw(40) << " ";
 		}
 		setColor(BLACK, WHITE);
 
 		chooseSettingsPage(code1, code2);		
 	}
 
+	setColor(BLACK, BLACK);
+	GotoXY(0, Distance_from_top);
+	std::cout << std::setw(3) << " ";
 
-
-	return 0;
+	GotoXY(0, Distance_from_top + 2);
+	std::cout << std::setw(3) << " ";
+	setColor(BLACK, WHITE);
+	return GOTO_HOME_PAGE;
 }
-
-/*
-for (int4 j = 1; j < content[i].size(); j++) {
-			GotoXY(51, Distance_from_top + i * 2 + j * 2);
-			std::cout << content[i][j];
-		}
-
-		std::cout << std::setfill(' ');
-	for (int4 i = 0; i < content.size(); i++) {
-		GotoXY(1, Distance_from_top + i * 2);
-		std::cout << std::setw(50) << std::left << content[i][0];
-
-	}
-*/
-
-
 
 void updateDataTo_continueFile(Snake &snake) {
 	wchar_t continue_file_name[] = L"data_for_continue_game.bin";
@@ -1241,6 +1237,8 @@ void updateDataTo_continueFile(Snake &snake) {
 	WriteFile(hfile, &snake.length, sizeof(snake.length), &write_success, NULL);
 	WriteFile(hfile, &snake.snake[0], sizeof(snake.snake[0]) * snake.length, &write_success, NULL);
 	WriteFile(hfile, &snake.allowed_for_continue, sizeof(snake.allowed_for_continue), &write_success, NULL);
+	WriteFile(hfile, &snake.head_direction, sizeof(snake.head_direction), &write_success, NULL);
+	WriteFile(hfile, &snake.prev_head_direction, sizeof(snake.prev_head_direction), &write_success, NULL);
 	
 	CloseHandle(hfile);
 	hfile = NULL;
@@ -1261,14 +1259,16 @@ void readDataFrom_continueFile(Snake& snake) {
 	snake.snake.resize(snake.length);
 	ReadFile(hfile, &snake.snake[0], sizeof(snake.snake[0]) * snake.length, &read_success, NULL);
 	ReadFile(hfile, &snake.allowed_for_continue, sizeof(snake.allowed_for_continue), &read_success, NULL);
+	ReadFile(hfile, &snake.head_direction, sizeof(snake.head_direction), &read_success, NULL);
+	ReadFile(hfile, &snake.prev_head_direction, sizeof(snake.prev_head_direction), &read_success, NULL);
 
 
 	CloseHandle(hfile);
 	hfile = NULL;
 }
 
-void clearAllFileContent(wchar_t* file_name) {
-	HANDLE hfile = CreateFileW(L"input.bin", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+void clearAllFileContent(wchar_t file_name[]) {
+	HANDLE hfile = CreateFileW(file_name, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	CloseHandle(hfile);
 	hfile = NULL;
 }

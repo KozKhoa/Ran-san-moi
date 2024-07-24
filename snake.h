@@ -164,7 +164,7 @@
 #define GOTO_GAMEPLAY_PAGE 2
 #define GOTO_CONTINUE_GAME 3
 #define GOTO_HISTORY_PAGE 4
-#define GOTO_OPTIONS_PAGE 5
+#define GOTO_SETTINGS_PAGE 209
 #define GOTO_EXIT 6
 #define GOTO_CHANGE_MODE_PAGE 1965
 #define GOTO_DO_NOT_THING 3647
@@ -212,11 +212,12 @@ private:
 	POINT tail;
 	
 	bool exist_food;
-	char head_direction;
-	char prev_head_direction;
+
+	
 	int4 bonus_speed; // cân nhắc xóa biến nảy ra khỏi chương trình
 
 	int4 choice(int4 num_of_choice, COORD pos_of_first_choice, int4 distance_between_each_choice, int4 start_code = 0);
+	int4 choice_allowed_for_exit(int4 num_of_choice, COORD pos_of_first_choice, int4 distance_between_each_choice, int4 start_code = 0);
 	void inDauRan();
 	void themDotRan();
 	void inDuoiRan();
@@ -230,7 +231,7 @@ private:
 	void createTableOfInfomationFor_historyPage(Data_of_each_game &data, int4 distance_from_the_previous);
 	void changeMode();
 	int4 pauseGame();
-	void initilizeForSettingsFile(std::vector<std::vector<std::string> > &content);
+	void initilizeForSettingsFile(std::vector<std::vector<std::string> > &content, std::vector<int4> &color);
 	int4 choice_vip(std::vector<std::vector<std::string> >& content);
 	void chooseSettingsPage(int4 code1, int4 code2);
 public:
@@ -250,6 +251,8 @@ public:
 	bool allowed_for_continue;
 	int4 snake_color;
 	int4 wall_color;
+	char head_direction;
+	char prev_head_direction;
 
 	void printSnake();
 	void moveSnack();
@@ -274,6 +277,6 @@ public:
 
 void updateDataTo_continueFile(Snake& snake);
 void readDataFrom_continueFile(Snake& snake);
-void clearAllFileContent(wchar_t* file_name);
+void clearAllFileContent(wchar_t file_name[]);
 void readDataFrom_settingsFile(Snake& snake);
 void writeDataTo_settingsFile(Snake& snake);
