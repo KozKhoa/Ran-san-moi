@@ -195,6 +195,11 @@ using int4 = int32_t;
 class Snake {
 private:
 	CONSOLE_SCREEN_BUFFER_INFO screenInfo;
+	struct Snake_body {
+		int4 x; 
+		int4 y;
+		char dir; // direction
+	};
 	struct Wall {
 		POINT top_left;
 		POINT top_right;
@@ -238,7 +243,7 @@ public:
 	Snake();
 	~Snake();
 
-	std::vector<POINT> snake;	
+	std::vector<Snake_body> snake;
 	Wall wall; 
 	int4 point;
 	Difficulty hard;
@@ -277,6 +282,5 @@ public:
 
 void updateDataTo_continueFile(Snake& snake);
 void readDataFrom_continueFile(Snake& snake);
-void clearAllFileContent(wchar_t file_name[]);
 void readDataFrom_settingsFile(Snake& snake);
 void writeDataTo_settingsFile(Snake& snake);

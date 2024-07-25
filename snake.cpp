@@ -22,6 +22,7 @@ Snake::Snake() {
 	snake.resize(length);
 	for (int4 i = 0; i < length; i++) {
 		snake[i] = { wall.top_left.x + i + 1, wall.top_right.y + 1 };
+		snake[i].dir = 'r';
 	}
 
 	hard.difficulty = EASY_CHOICE;
@@ -199,9 +200,32 @@ void Snake::setupWall() {
 
 void Snake::printSnake() {
 	setColor(BLACK, snake_color);
-	for (int4 i = length - 1; i >= 0; i--) {
+
+	GotoXY(snake[0].x, snake[0].y);
+	printf("%c", HINH_DUOI_RAN);
+
+	for (int4 i = length - 2 ; i >= 0; i--) {
 		GotoXY(snake[i].x, snake[i].y);
-		printf("%c", HINH_DOT_RAN);
+		if ((snake[i + 1].dir == 'r' && snake[i].dir == 'u') || (snake[i + 1].dir == 'd' && snake[i].dir == 'l')) {
+			printf("%c", TURN_RIGHT_DOWN);
+		}
+		else if ((snake[i + 1].dir == 'd' && snake[i].dir == 'r') || (snake[i + 1].dir == 'l' && snake[i].dir == 'u')) {
+			printf("%c", TURN_LEFT_DOWN);
+		}
+		else if ((snake[i + 1].dir == 'r' && snake[i].dir == 'd') || (snake[i + 1].dir == 'u' && snake[i].dir == 'l')) {
+			printf("%c", TURN_RIGHT_UP);
+		}
+		else if ((snake[i + 1].dir == 'u' && snake[i].dir == 'r') || (snake[i + 1].dir == 'l' && snake[i].dir == 'd')) {
+			printf("%c", TURN_LEFT_UP);
+		}
+		else if (snake[i + 1].dir == snake[i].dir) {
+			if (snake[i].dir == 'u' || snake[i].dir == 'd') {
+				printf("%c", HINH_DOT_RAN_DOC);
+			}
+			else if (snake[i].dir == 'r' || snake[i].dir == 'l') {
+				printf("%c", HINH_DOT_RAN);
+			}
+		}
 	}
 	setColor(BLACK, WHITE);
 }
@@ -220,14 +244,11 @@ void Snake::inDauRan() {
 }
 
 void Snake::inDuoiRan() {
-	setColor(BLACK, snake_color);
 	GotoXY(snake[0].x, snake[0].y);
 	printf("%c", HINH_DUOI_RAN);
-	setColor(BLACK, WHITE);
 }
 
 void Snake::inCoRan() {
-	setColor(BLACK, snake_color);
 	GotoXY(snake[length - 2].x, snake[length - 2].y);
 	if (prev_head_direction == head_direction) {
 		if (head_direction == 'u' || head_direction == 'd') {
@@ -252,7 +273,6 @@ void Snake::inCoRan() {
 		}
 		prev_head_direction = head_direction;
 	}
-	setColor(BLACK, WHITE);
 }
 
 void Snake::speedGame() {
@@ -272,6 +292,7 @@ void Snake::moveSnack() {
 		snake[i] = snake[i + 1];
 	}
 	//
+	setColor(BLACK, snake_color);
 	inDuoiRan();
 	inCoRan();
 	if (head_direction == 'u') {
@@ -286,6 +307,8 @@ void Snake::moveSnack() {
 	else if (head_direction == 'l') {
 		snake[length - 1].x = snake[length - 1].x - 1;
 	}
+	snake[length - 1].dir = head_direction;
+	setColor(BLACK, WHITE);
 	inDauRan();
 }
 
@@ -408,11 +431,11 @@ int4 Snake::endGame(const wchar_t* content) {
 
 #define DISTANCE_FROM_TOP_OF_TABLE pos_top_left.Y + 3
 #define DISTANCE_FROM_TIME_UP_NOTIFY 3
-	_setmode(_fileno(stdout), _O_U16TEXT);
+	bool check = _setmode(_fileno(stdout), _O_U16TEXT);
 	setColor(BLACK, WHITE);
 	GotoXY(pos_top_left.X + (pos_bottom_right.X - pos_top_left.X) / 2 - wcslen(content) / 2, DISTANCE_FROM_TOP_OF_TABLE);
 	wprintf(content);
-	_setmode(_fileno(stdout), _O_TEXT);
+	check = _setmode(_fileno(stdout), _O_TEXT);
 
 	setColor(BLACK, GREEN);
 	GotoXY(pos_top_left.X + (pos_bottom_right.X - pos_top_left.X) / 2 - strlen(PLAY_AGAIN) / 2, DISTANCE_FROM_TOP_OF_TABLE + 3);
@@ -484,6 +507,7 @@ void Snake::randomFood() {
 
 	food.x = wall.top_left.x + 1 + rand() % (wall.top_right.x - wall.top_left.x - 1);
 	food.y = wall.top_left.y + 1 + rand() % (wall.bottom_left.y - wall.top_left.y - 1);
+	if (food.x - snake[length - 1].x <= 2 || food.y - snake[length - 1].y <= 2) { return;  }
 	for (int4 i = length - 1; i >= 0; i--) {
 		if (food.x == snake[i].x && food.y == snake[i].y) {
 			/*food.x = snake[0].x;
@@ -515,7 +539,7 @@ bool Snake::updateTime(int4 sec) {
 }
 
 void Snake::createStatus() {
-	_setmode(_fileno(stdout), _O_U16TEXT);
+	bool check = _setmode(_fileno(stdout), _O_U16TEXT);
 
 	GotoXY(screenInfo.dwSize.X / 2 - 6, 1);
 	wprintf(L"GAME RẮN SĂN MỒI");
@@ -539,13 +563,18 @@ void Snake::createStatus() {
 
 	GotoXY(wall.top_left.x + (wall.top_right.x - wall.top_left.x) / 2 - strlen(COUNT_DOWN) / 2,
 		wall.top_left.y - DISTANCE_FROM_TOP_WALL - 1);
-	wprintf(L"THỜI GIAN CÒN LẠI : ");
+	if (mode == MODE_CLASSIC) {
+		wprintf(L"THỜI GIAN CÒN LẠI : ");
+	} 
+	else if (mode == MODE_FREEDOM) {
+		wprintf(L"THỜI GIAN ĐÃ CHƠI : ");
+	}
 
 	GotoXY(wall.top_left.x + (wall.top_right.x - wall.top_left.x) / 2 - strlen(COUNT_DOWN) / 2,
 		wall.top_left.y - DISTANCE_FROM_TOP_WALL);
 	wprintf(L"VỊ TRÍ THỨC ĂN : ");
 
-	_setmode(_fileno(stdout), _O_TEXT);
+	check = _setmode(_fileno(stdout), _O_TEXT);
 
 	GotoXY(wall.top_left.x + (wall.top_right.x - wall.top_left.x) / 2 + strlen(FOOD_POS) / 2 - 1,
 		wall.top_left.y - DISTANCE_FROM_TOP_WALL);
@@ -614,10 +643,10 @@ int4 Snake::difficultyPage() {
 
 	printDIFFICULTY_character(DISTANCE_FROM_TOP_DIFFICULT_PAGE, DISTANCE_FROM_LEFT);
 
-	_setmode(_fileno(stdout), _O_U16TEXT);
+	bool check = _setmode(_fileno(stdout), _O_U16TEXT);
 	GotoXY(screenInfo.dwSize.X / 2 - strlen(CHOOSE_DIFFICULTY) / 2, DISTANCE_FROM_DIFFICULTY + DISTANCE_FROM_TOP_DIFFICULT_PAGE + 5);
 	std::wcout << L"HÃY CHỌN ĐỘ KHÓ";
-	_setmode(_fileno(stdout), _O_TEXT);
+	check = _setmode(_fileno(stdout), _O_TEXT);
 
 	setColor(BLACK, GREEN);
 	GotoXY(POS_OF_EASY_X, POS_OF_EASY_Y);
@@ -711,7 +740,7 @@ int4 Snake::chooseHome() {
 }
 
 void Snake::changeMode() {
-	char STRING_CHANGE_MODE[] = " CHANGE MODE";
+	char STRING_CHANGE_MODE[] = "--> CHANGE MODE <--";
 	wchar_t STRING_CLASSIC[] = L"CỔ ĐIỂN";
 	wchar_t STRING_FREEDOM[] = L"TỰ DO";
 
@@ -725,14 +754,20 @@ void Snake::changeMode() {
 	COORD POS_OF_MODE_CLASSIC = { screenInfo.dwSize.X / 2 - wcslen(STRING_CLASSIC) / 2, pos_of_top_left_table.Y + 5 };
 	COORD POS_OF_MODE_FREEDOM = { screenInfo.dwSize.X / 2 - wcslen(STRING_FREEDOM) / 2, POS_OF_MODE_CLASSIC.Y + 3 };
 
+	setColor(BLACK, LIGHT_AQUA);
 	GotoXY(screenInfo.dwSize.X / 2 - strlen(STRING_CHANGE_MODE) / 2, pos_of_top_left_table.Y + 2);
 	std::cout << STRING_CHANGE_MODE;
-	_setmode(_fileno(stdout), _O_U16TEXT);
+	bool check = _setmode(_fileno(stdout), _O_U16TEXT);
+	setColor(BLACK, YELLOW);
 	GotoXY(POS_OF_MODE_CLASSIC.X, POS_OF_MODE_CLASSIC.Y);
 	std::wcout << STRING_CLASSIC;
+
+	setColor(BLACK, GREEN);
 	GotoXY(POS_OF_MODE_FREEDOM.X, POS_OF_MODE_FREEDOM.Y);
 	std::wcout << STRING_FREEDOM;
-	_setmode(_fileno(stdout), _O_TEXT);
+
+	setColor(BLACK, WHITE);
+	check = _setmode(_fileno(stdout), _O_TEXT);
 
 	COORD pos_of_first_choice = { screenInfo.dwSize.X / 2, pos_of_top_left_table.Y + 5 };
 	int4 code = choice(2, pos_of_first_choice, 3);
@@ -754,14 +789,14 @@ int4 Snake::homePage() {
 	GotoXY(screenInfo.dwSize.X / 2 - strlen(STRING_MODE_GAME) / 2 - 3, DISTANCE_FROM_SNAKE_CHARATER);
 	setColor(BLACK, WHITE);
 	printf(STRING_MODE_GAME);
-	_setmode(_fileno(stdout), _O_U16TEXT);
+	bool check = _setmode(_fileno(stdout), _O_U16TEXT);
 	if (mode == MODE_CLASSIC) {
 		wprintf(L"CỔ ĐIỂN");
 	}
 	else if (mode == MODE_FREEDOM) {
 		wprintf(L"TỰ DO");
 	}
-	_setmode(_fileno(stdout), _O_TEXT);
+	check = _setmode(_fileno(stdout), _O_TEXT);
 
 	GotoXY(screenInfo.dwSize.X / 2 - strlen(STRING_NEW_GAME) / 2, DISTANCE_FROM_MODE_GAME_CHAR);
 	setColor(BLACK, GREEN);
@@ -955,7 +990,7 @@ void Snake::createTableOfInfomationFor_historyPage(Data_of_each_game& data, int 
 	std::cout << std::setfill(' ');
 	std::cout << std::setw(screenInfo.dwSize.X / 2 + strlen(time_start) / 2) << std::right << time_start << '\n';
 
-	_setmode(_fileno(stdout), _O_U16TEXT);
+	bool check = _setmode(_fileno(stdout), _O_U16TEXT);
 	std::wcout << std::setw(3) << L" " << L"MODE: ";
 	if (data.mode == MODE_CLASSIC) {
 		std::wcout << L"CỔ ĐIỂN";
@@ -1003,7 +1038,7 @@ void Snake::createTableOfInfomationFor_historyPage(Data_of_each_game& data, int 
 	else if (data.mode == MODE_FREEDOM) {
 		std::wcout << L"TIME USE: " << data.time_finish;
 	}
-	_setmode(_fileno(stdout), _O_TEXT);
+	check = check = _setmode(_fileno(stdout), _O_TEXT);
 
 	delete[] time_start;
 }
@@ -1049,7 +1084,7 @@ int4 Snake::historyPage(File& file) {
 void Snake::initilizeForSettingsFile(std::vector<std::vector<std::string> >& content, std::vector<int4> &color) {
 	content.resize(3);
 
-	content[0].resize(8);
+	content[0].resize(9);
 	content[0][0] = "SNAKE COLOR";
 	content[0][1] = "BLUE";
 	content[0][2] = "GREEN";
@@ -1058,8 +1093,9 @@ void Snake::initilizeForSettingsFile(std::vector<std::vector<std::string> >& con
 	content[0][5] = "PURPLE";
 	content[0][6] = "YELLOW";
 	content[0][7] = "WHITE";
+	content[0][8] = "GRAY";
 
-	content[1].resize(8);
+	content[1].resize(9);
 	content[1][0] = "WALL COLOR";
 	content[1][1] = "BLUE";
 	content[1][2] = "GREEN";
@@ -1068,13 +1104,14 @@ void Snake::initilizeForSettingsFile(std::vector<std::vector<std::string> >& con
 	content[1][5] = "PURPLE";
 	content[1][6] = "YELLOW";
 	content[1][7] = "WHITE";
+	content[1][8] = "GRAY";
 
 	content[2].resize(3);
 	content[2][0] = "DELETE HISTORY";
 	content[2][1] = "YES";
 	content[2][2] = "NO";
 
-	color.resize(7);
+	color.resize(8);
 	color[0] = BLUE;
 	color[1] = GREEN;
 	color[2] = AQUA;
@@ -1082,6 +1119,7 @@ void Snake::initilizeForSettingsFile(std::vector<std::vector<std::string> >& con
 	color[4] = PURPULE;
 	color[5] = YELLOW;
 	color[6] = WHITE;
+	color[7] = GRAY;
 
 }
 
@@ -1108,6 +1146,9 @@ void Snake::chooseSettingsPage(int4 code1, int4 code2) {
 		else if (code2 == 6) {
 			snake_color = WHITE;
 		}
+		else if (code2 == 7) {
+			snake_color = GRAY;
+		}
 	}
 	else if (code1 == 1) {
 		if (code2 == 0) {
@@ -1131,16 +1172,18 @@ void Snake::chooseSettingsPage(int4 code1, int4 code2) {
 		else if (code2 == 6) {
 			wall_color = WHITE;
 		}
+		else if (code2 == 7) {
+			wall_color = GRAY;
+		}
 	}
 	else if (code1 == 2) {
 		if (code2 == 0) {
-			wchar_t file_name[] = FILE_NAME_DATA_FOR_HISTORY_FILE;
-			clearAllFileContent(file_name);
-			/*wchar_t* file_name = new WCHAR[wcslen(FILE_NAME_DATA_FOR_HISTORY_FILE)];
-			lstrcpy(file_name, FILE_NAME_DATA_FOR_HISTORY_FILE);
-			clearAllFileContent(file_name);
-			delete[] file_name;*/
-
+			HANDLE hfile = CreateFileW(FILE_NAME_DATA_FOR_HISTORY_FILE, GENERIC_READ | GENERIC_WRITE,
+				FILE_SHARE_WRITE | FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+			int4 num_of_data = 0;
+			DWORD write_sucess = 0;
+			WriteFile(hfile, &num_of_data, sizeof(int4), &write_sucess, NULL);
+			CloseHandle(hfile);
 		}
 	}
 }
@@ -1171,7 +1214,7 @@ int4 Snake::settingsPage() {
 	GotoXY(40, screenInfo.dwSize.Y - 1);
 	std::cout << char(202);
 	COORD pos_of_first_choice1 = { 16, Distance_from_top };
-	COORD pos_of_first_choice2 = { 65, Distance_from_top };
+	COORD pos_of_first_choice2 = { 63, Distance_from_top };
 	int4 code1 = 0;
 	int4 code2 = 0;
 	while (true) {
@@ -1201,7 +1244,7 @@ int4 Snake::settingsPage() {
 			std::cout << content[code1][i];
 		}
 
-		code2 = choice(content[code1].size() - 1, pos_of_first_choice2, 2) - 1;
+		code2 = choice_allowed_for_exit(content[code1].size() - 1, pos_of_first_choice2, 2) - 1;
 
 		setColor(BLACK, BLACK);
 		for (int4 i = 1; i < content[code1].size(); i++) {
@@ -1249,26 +1292,20 @@ void readDataFrom_continueFile(Snake& snake) {
 	HANDLE hfile = CreateFileW(FILE_NAME_DATA_FOR_CONTINUE_GAME, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hfile == INVALID_HANDLE_VALUE) { throw std::exception("Cannot open file to read"); };
 	DWORD read_success;
-
-	ReadFile(hfile, &snake.hard.speed, sizeof(snake.hard.speed), &read_success, NULL);
-	ReadFile(hfile, &snake.time_left, sizeof(snake.time_left), &read_success, NULL);
-	ReadFile(hfile, &snake.mode, sizeof(snake.mode), &read_success, NULL);
-	ReadFile(hfile, &snake.point, sizeof(snake.point), &read_success, NULL);
-	ReadFile(hfile, &snake.food, sizeof(snake.food), &read_success, NULL);
-	ReadFile(hfile, &snake.length, sizeof(snake.length), &read_success, NULL);
+	bool check_read;
+	check_read = ReadFile(hfile, &snake.hard.speed, sizeof(snake.hard.speed), &read_success, NULL);
+	check_read = ReadFile(hfile, &snake.time_left, sizeof(snake.time_left), &read_success, NULL);
+	check_read = ReadFile(hfile, &snake.mode, sizeof(snake.mode), &read_success, NULL);
+	check_read = ReadFile(hfile, &snake.point, sizeof(snake.point), &read_success, NULL);
+	check_read = ReadFile(hfile, &snake.food, sizeof(snake.food), &read_success, NULL);
+	check_read = ReadFile(hfile, &snake.length, sizeof(snake.length), &read_success, NULL);
 	snake.snake.resize(snake.length);
-	ReadFile(hfile, &snake.snake[0], sizeof(snake.snake[0]) * snake.length, &read_success, NULL);
-	ReadFile(hfile, &snake.allowed_for_continue, sizeof(snake.allowed_for_continue), &read_success, NULL);
-	ReadFile(hfile, &snake.head_direction, sizeof(snake.head_direction), &read_success, NULL);
-	ReadFile(hfile, &snake.prev_head_direction, sizeof(snake.prev_head_direction), &read_success, NULL);
+	check_read = ReadFile(hfile, &snake.snake[0], sizeof(snake.snake[0]) * snake.length, &read_success, NULL);
+	check_read = ReadFile(hfile, &snake.allowed_for_continue, sizeof(snake.allowed_for_continue), &read_success, NULL);
+	check_read = ReadFile(hfile, &snake.head_direction, sizeof(snake.head_direction), &read_success, NULL);
+	check_read = ReadFile(hfile, &snake.prev_head_direction, sizeof(snake.prev_head_direction), &read_success, NULL);
 
 
-	CloseHandle(hfile);
-	hfile = NULL;
-}
-
-void clearAllFileContent(wchar_t file_name[]) {
-	HANDLE hfile = CreateFileW(file_name, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	CloseHandle(hfile);
 	hfile = NULL;
 }
@@ -1284,8 +1321,9 @@ void readDataFrom_settingsFile(Snake& snake) {
 	}
 
 	DWORD read_success;
-	ReadFile(hfile, &snake.snake_color, sizeof(snake.snake_color), &read_success, NULL);
-	ReadFile(hfile, &snake.wall_color, sizeof(snake.wall_color), &read_success, NULL);
+	bool check_read;
+	check_read = ReadFile(hfile, &snake.snake_color, sizeof(snake.snake_color), &read_success, NULL);
+	check_read = ReadFile(hfile, &snake.wall_color, sizeof(snake.wall_color), &read_success, NULL);
 
 	CloseHandle(hfile);
 	hfile = NULL;
