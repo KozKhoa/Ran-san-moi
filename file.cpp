@@ -1,16 +1,12 @@
 #include "file.h"
 
 File::File() {
-	/*hfile_history_file = CreateFileW(FILE_NAME_DATA_FOR_HISTORY_FILE, GENERIC_READ | GENERIC_WRITE, 
-		FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);*/
 	num_of_data = 0;
 	data.resize(num_of_data);
 	getDataFromFile_history();
 }
 
 File::~File() {
-	/*CloseHandle(hfile_history_file);
-	hfile_history_file = NULL;*/
 	num_of_data = 0;
 	data.resize(num_of_data);
 }
@@ -63,13 +59,3 @@ void  File::updateToDataFor_history(char difficulty, char mode, int2 point, int2
 	data.push_back(game_data);
 	num_of_data++;
 }
-
-void File::clearHistoryFile() {
-	HANDLE hfile = CreateFileW(FILE_NAME_DATA_FOR_HISTORY_FILE, GENERIC_WRITE, 0, NULL, TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-}
-
-
-
-
-

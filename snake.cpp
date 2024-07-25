@@ -39,8 +39,6 @@ Snake::Snake() {
 
 	allowed_for_continue = false;
 	exist_food = false;
-
-	//existFood = false;
 	point = 0;
 }
 
@@ -277,10 +275,10 @@ void Snake::inCoRan() {
 
 void Snake::speedGame() {
 	if (head_direction == 'u' || head_direction == 'd') {
-		Sleep(hard.speed * 3 / 2 - bonus_speed);
+		Sleep(hard.speed * 3 / 2);
 	}
 	else {
-		Sleep(hard.speed - bonus_speed);
+		Sleep(hard.speed);
 	}
 }
 
@@ -315,19 +313,15 @@ void Snake::moveSnack() {
 void Snake::changeDirection(int4 event) {
 	if (head_direction != 'd' && (event == CODE_UP_ARROW || event == 'w' || event == 'W')) {
 		head_direction = 'u';
-		bonus_speed = 0;
 	}
 	else if (head_direction != 'u' && (event == CODE_DOWN_ARROW || event == 's' || event == 'S')) {
 		head_direction = 'd';
-		bonus_speed = 0;
 	}
 	else if (head_direction != 'l' && (event == CODE_RIGHT_ARROW || event == 'd' || event == 'D')) {
 		head_direction = 'r';
-		bonus_speed = 0;
 	}
 	else if (head_direction != 'r' && (event == CODE_LEFT_ARROW || event == 'a' || event == 'A')) {
 		head_direction = 'l';
-		bonus_speed = 0;
 	}
 }
 
@@ -438,16 +432,16 @@ int4 Snake::endGame(const wchar_t* content) {
 	check = _setmode(_fileno(stdout), _O_TEXT);
 
 	setColor(BLACK, GREEN);
-	GotoXY(pos_top_left.X + (pos_bottom_right.X - pos_top_left.X) / 2 - strlen(PLAY_AGAIN) / 2, DISTANCE_FROM_TOP_OF_TABLE + 3);
-	printf(PLAY_AGAIN);
+	GotoXY(pos_top_left.X + (pos_bottom_right.X - pos_top_left.X) / 2 - strlen(STRING_PLAY_AGAIN) / 2, DISTANCE_FROM_TOP_OF_TABLE + 3);
+	printf(STRING_PLAY_AGAIN);
 
 	setColor(BLACK, YELLOW);
-	GotoXY(pos_top_left.X + (pos_bottom_right.X - pos_top_left.X) / 2 - strlen(HOME) / 2, DISTANCE_FROM_TOP_OF_TABLE + 6);
-	printf(HOME);
+	GotoXY(pos_top_left.X + (pos_bottom_right.X - pos_top_left.X) / 2 - strlen(STRING_HOME) / 2, DISTANCE_FROM_TOP_OF_TABLE + 6);
+	printf(STRING_HOME);
 
 	setColor(BLACK, RED);
-	GotoXY(pos_top_left.X + (pos_bottom_right.X - pos_top_left.X) / 2 - strlen(EXIT) / 2, DISTANCE_FROM_TOP_OF_TABLE + 9);
-	printf(EXIT);
+	GotoXY(pos_top_left.X + (pos_bottom_right.X - pos_top_left.X) / 2 - strlen(STRING_EXIT) / 2, DISTANCE_FROM_TOP_OF_TABLE + 9);
+	printf(STRING_EXIT);
 
 	setColor(BLACK, WHITE);
 	COORD pos_of_first_choice = { screenInfo.dwSize.X / 2, DISTANCE_FROM_TOP_OF_TABLE + 3 };
@@ -489,7 +483,6 @@ void Snake::resetSnakeData() {
 	for (int4 i = 0; i < length; i++) {
 		snake[i] = { wall.top_left.x + i + 1, wall.top_right.y + 1 };
 	}
-	//existFood = false;
 	point = 0;
 }
 
@@ -510,8 +503,6 @@ void Snake::randomFood() {
 	if (food.x - snake[length - 1].x <= 2 || food.y - snake[length - 1].y <= 2) { return;  }
 	for (int4 i = length - 1; i >= 0; i--) {
 		if (food.x == snake[i].x && food.y == snake[i].y) {
-			/*food.x = snake[0].x;
-			food.y = snake[0].y;*/
 			return;
 		}
 	}
@@ -644,7 +635,7 @@ int4 Snake::difficultyPage() {
 	printDIFFICULTY_character(DISTANCE_FROM_TOP_DIFFICULT_PAGE, DISTANCE_FROM_LEFT);
 
 	bool check = _setmode(_fileno(stdout), _O_U16TEXT);
-	GotoXY(screenInfo.dwSize.X / 2 - strlen(CHOOSE_DIFFICULTY) / 2, DISTANCE_FROM_DIFFICULTY + DISTANCE_FROM_TOP_DIFFICULT_PAGE + 5);
+	GotoXY(screenInfo.dwSize.X / 2 - strlen(STRING_CHOOSE_DIFFICULTY) / 2, DISTANCE_FROM_DIFFICULTY + DISTANCE_FROM_TOP_DIFFICULT_PAGE + 5);
 	std::wcout << L"HÃY CHỌN ĐỘ KHÓ";
 	check = _setmode(_fileno(stdout), _O_TEXT);
 
@@ -814,9 +805,9 @@ int4 Snake::homePage() {
 	setColor(BLACK, LIGHT_PURPLE);
 	printf(STRING_SETTINGS);
 
-	GotoXY(screenInfo.dwSize.X / 2 - strlen(EXIT) / 2, DISTANCE_FROM_OPTION);
+	GotoXY(screenInfo.dwSize.X / 2 - strlen(STRING_EXIT) / 2, DISTANCE_FROM_OPTION);
 	setColor(BLACK, RED);
-	printf(EXIT);
+	printf(STRING_EXIT);
 
 	setColor(BLACK, WHITE);
 
@@ -939,18 +930,16 @@ int4 Snake::gamePlayPage() {
 			themDotRan();
 			updateStatus();
 			randomFood();
-			exist_food = true;
+			exist_food = true;	
 		}
 		speedGame();
 	}
-	//reset_time = true;
 	int4 action = 0;
 	if (reason_for_lose == NOT_LOSE) {
 		allowed_for_continue = true;
 		action = GOTO_HOME_PAGE;
 		time_left = time_use;
 		// thoat ra la do update file chuan bi choi tiep
-		//HANDLE hfile = CreateFileW(hfile, GENERIC_WRITE, 0, NULL, )
 	}
 	else if (reason_for_lose == LOSE_BY_WALL || reason_for_lose == LOSE_BY_EAT_ITSELF) {
 		allowed_for_continue = false;

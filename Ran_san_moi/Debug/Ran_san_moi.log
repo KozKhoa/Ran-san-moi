@@ -1,0 +1,7 @@
+﻿  console.cpp
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\console.cpp(4,18): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\console.cpp(4,21): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+  main.cpp
+  snake.cpp
+  Generating Code...
+  Ran_san_moi.vcxproj -> C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\Debug\Ran_san_moi.exe

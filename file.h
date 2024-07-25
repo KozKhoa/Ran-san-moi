@@ -22,13 +22,10 @@ struct Data_of_each_game {
 	int2 length;
 	int2 time_finish;
 	time_t time_start;
-	
-
 };
 
 class File {
 private:
-	//HANDLE hfile_history_file;
 	HANDLE hfile_continue_file;
 public:
 	File();
@@ -40,7 +37,6 @@ public:
 	void writeDataToFile_history();
 	void updateToDataFor_history(char difficulty, char mode, int2 point, int2 speed, int2 length,
 		int2 time_finish, time_t time_start);
-	void clearHistoryFile();
 };
 
 /*

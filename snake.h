@@ -33,7 +33,7 @@
 	#define DISTANCE_FROM_TOP_DIFFICULT_PAGE 3
 	#define DISTANCE_FROM_LEFT screenInfo.dwSize.X / 2 - DIFFICULTY_LENGTH / 2
 	#define DISTANCE_FROM_DIFFICULTY 5
-	#define CHOOSE_DIFFICULTY "HÃY CHỌN ĐỘ KHÓ"
+	#define STRING_CHOOSE_DIFFICULTY "HÃY CHỌN ĐỘ KHÓ"
 	
 	#define POS_OF_EASY_X screenInfo.dwSize.X / 2 - strlen(EASY) / 2
 	#define POS_OF_EASY_Y  DISTANCE_FROM_TOP_DIFFICULT_PAGE + 5 + DISTANCE_FROM_DIFFICULTY + 4
@@ -78,9 +78,9 @@
 #define KHUNG_TOP char(205)
 #define KHUNG_LEFT char(186)
 
-#define PLAY_AGAIN "PLAY AGAIN"
-#define HOME "HOME"
-#define EXIT "EXIT"
+#define STRING_PLAY_AGAIN "PLAY AGAIN"
+#define STRING_HOME "HOME"
+#define STRING_EXIT "EXIT"
 #define STRING_TIME_UP L"-->  HẾT THỜI GIAN  <--"
 
 #endif // !_TIME_UP_
@@ -132,15 +132,19 @@
 #define LIMIT_TIME_EASY 120
 #define LIMIT_TIME_MEDIUM 90
 #define LIMIT_TIME_HARD 60;
+
 #define EASY_CHOICE 'e'
 #define MEDIUM_CHOICE 'm'
 #define HARD_CHOICE 'h'
+
 #define PLUS_POINT_EASY 10
 #define PLUS_POINT_MEDIUM 12
 #define PLUS_POINT_HARD 15
+
 #define SPEED_EASY 150
 #define SPEED_MEDIUM 120
 #define SPEED_HARD 100
+
 #define MINUS_SPEED_EASY 1
 #define MINUS_SPEED_MEDIUM 2
 #define MINUS_SPEED_HARD 3
@@ -218,9 +222,6 @@ private:
 	
 	bool exist_food;
 
-	
-	int4 bonus_speed; // cân nhắc xóa biến nảy ra khỏi chương trình
-
 	int4 choice(int4 num_of_choice, COORD pos_of_first_choice, int4 distance_between_each_choice, int4 start_code = 0);
 	int4 choice_allowed_for_exit(int4 num_of_choice, COORD pos_of_first_choice, int4 distance_between_each_choice, int4 start_code = 0);
 	void inDauRan();
@@ -239,6 +240,10 @@ private:
 	void initilizeForSettingsFile(std::vector<std::vector<std::string> > &content, std::vector<int4> &color);
 	int4 choice_vip(std::vector<std::vector<std::string> >& content);
 	void chooseSettingsPage(int4 code1, int4 code2);
+	void changeDirection(int4 event);
+	void randomFood();
+	bool checkEatFood();
+	void speedGame();
 public:
 	Snake();
 	~Snake();
@@ -261,14 +266,10 @@ public:
 
 	void printSnake();
 	void moveSnack();
-	void changeDirection(int4 event);
 	void createWall();
 	void deleteWall();
 	int4 checkGameOver();
 	int4 endGame(const wchar_t* content);
-	void randomFood();
-	bool checkEatFood();
-	void speedGame();
 	void resetSnakeData(); // không reset difficulty;
 	void createStatus();
 	void updateStatus();

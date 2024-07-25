@@ -1,0 +1,110 @@
+﻿  console.cpp
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\console.cpp(40,24): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\console.cpp(40,31): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\console.cpp(55,31): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\console.cpp(55,38): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+  dummy.cpp
+  file.cpp
+  main.cpp
+  notification.cpp
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\notification.cpp(349,33): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+  snake.cpp
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(330,39): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(330,22): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(335,45): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(335,25): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(340,42): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(340,22): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(343,47): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(343,23): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(346,44): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(346,23): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(349,49): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(349,24): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(357,39): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(357,22): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(362,45): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(362,25): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(367,42): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(367,22): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(370,47): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(370,23): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(373,44): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(373,23): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(376,49): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(376,24): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(421,41): warning C4838: conversion from 'LONG' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(421,41): warning C4244: 'initializing': conversion from 'LONG' to 'SHORT', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(421,63): warning C4838: conversion from 'LONG' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(421,63): warning C4244: 'initializing': conversion from 'LONG' to 'SHORT', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(422,49): warning C4838: conversion from 'LONG' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(422,49): warning C4244: 'initializing': conversion from 'LONG' to 'SHORT', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(422,75): warning C4838: conversion from 'LONG' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(422,75): warning C4244: 'initializing': conversion from 'LONG' to 'SHORT', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(430,68): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(435,68): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(439,68): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(443,68): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(497,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(509,21): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(509,13): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(512,19): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(511,91): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(523,44): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(522,68): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(538,42): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(538,22): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(541,63): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(541,26): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(544,88): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(544,26): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(552,67): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(552,22): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(556,44): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(555,68): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(565,19): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(564,68): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(571,19): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(570,91): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(582,65): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(582,25): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(585,80): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(585,45): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(588,83): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(588,25): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(638,42): warning C4566: character represented by universal-character-name '\u1ECC' cannot be represented in the current code page (1252)
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(638,42): warning C4566: character represented by universal-character-name '\u0110' cannot be represented in the current code page (1252)
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(638,42): warning C4566: character represented by universal-character-name '\u1ED8' cannot be represented in the current code page (1252)
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(638,33): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(643,9): error C2065: 'EASY': undeclared identifier
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(647,9): error C2065: 'MEDIUM': undeclared identifier
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(651,9): error C2065: 'HARD': undeclared identifier
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(745,56): warning C4838: conversion from 'size_t' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(745,56): warning C4267: 'initializing': conversion from 'size_t' to 'SHORT', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(746,56): warning C4838: conversion from 'size_t' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(746,56): warning C4267: 'initializing': conversion from 'size_t' to 'SHORT', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(749,33): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(780,64): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(792,33): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(796,33): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(800,33): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(804,33): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(808,33): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(841,49): warning C4838: conversion from 'int4' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(841,98): warning C4838: conversion from 'int4' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(842,53): warning C4838: conversion from 'int4' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(842,102): warning C4838: conversion from 'int4' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(849,68): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(853,68): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(857,68): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(893,22): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(893,14): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(900,19): warning C4244: '=': conversion from 'time_t' to 'int4', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(924,23): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(924,15): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(1048,34): warning C4267: 'argument': conversion from 'size_t' to 'short', possible loss of data
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(1205,37): warning C4838: conversion from 'int4' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(1206,37): warning C4838: conversion from 'int4' to 'SHORT' requires a narrowing conversion
+C:\Users\topki\OneDrive - VNU-HCMUS\Code\C++\Visual Studio 2022\Ran_san_moi\snake.cpp(1236,57): warning C4267: 'argument': conversion from 'size_t' to 'int4', possible loss of data
+  Source.cpp
+  Generating Code...
